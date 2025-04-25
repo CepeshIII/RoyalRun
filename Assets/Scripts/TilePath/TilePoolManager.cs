@@ -75,18 +75,18 @@ public class TilePoolManager : MonoBehaviour
         return tile;
     }
 
-    public CachedObject AddCachedObject(Tile tile, GameObject prefab)
+    public CachedObject AddCachedObject(Tile tile, GameObject prefab, string identifier)
     {
-        return AddCachedObject(tile, prefab, tile.position);
+        return AddCachedObject(tile, prefab, tile.position, identifier);
     }
 
-    public CachedObject AddCachedObject(Tile tile, GameObject prefab, Vector3 position)
+    public CachedObject AddCachedObject(Tile tile, GameObject prefab, Vector3 position, string identifier)
     {
         // Try find list of prefabs with specific name or create one
-        if (!_initializedCachedObjectsLists.TryGetValue(prefab.name, out var list))
+        if (!_initializedCachedObjectsLists.TryGetValue(identifier, out var list))
         {
             list = new();
-            _initializedCachedObjectsLists.Add(prefab.name, list);
+            _initializedCachedObjectsLists.Add(identifier, list);
         }
 
         // Try find unoccupied object with specific type or create new one, then activate object

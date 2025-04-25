@@ -6925,7 +6925,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1807310073
 Transform:
   m_ObjectHideFlags: 0
@@ -6953,8 +6953,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9493d7880ba37d842a685be134159042, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabsToSpawn:
-  - {fileID: 2324050925044277620, guid: 01b0d7cd3288fb04aa0c7ed55acafb11, type: 3}
+  threwObjectTypes:
+  - {fileID: 11400000, guid: 804b48cc6d3f4e446bbafa0272cb05ee, type: 2}
+  - {fileID: 11400000, guid: 7559e3c14037f314f9e0973ea1b78fd8, type: 2}
+  - {fileID: 11400000, guid: 4cfc64bbef60f0547a506ff3df854c61, type: 2}
+  - {fileID: 11400000, guid: a1a4f5174dceb5d40919f17d29b4dc7a, type: 2}
+  - {fileID: 11400000, guid: 26ec2508f8dacdc4ea8f882391bb5a49, type: 2}
+  threwObjectMainPartPrefab: {fileID: 3254996215247811425, guid: c1fbd4bf08ce15043936e13b54e19d14, type: 3}
   TilePoolManager: {fileID: 0}
   PathGenerator: {fileID: 55089753}
   Player: {fileID: 31476538}

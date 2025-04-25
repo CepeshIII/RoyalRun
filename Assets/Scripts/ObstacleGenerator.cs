@@ -44,7 +44,7 @@ public class ObstacleGenerator : MonoBehaviour
         var item = tilePrefabs[Random.Range(0, tilePrefabs.Count - 1)];
 
         if(tile != null && item != null)
-            tilePoolManager.AddCachedObject(tile, item, position);
+            tilePoolManager.AddCachedObject(tile, item, position, item.name);
     }
 
     private void CreateCollectableItem(Tile tile, Vector3Int position)
@@ -52,7 +52,7 @@ public class ObstacleGenerator : MonoBehaviour
         var item = collectableItemsPrefabs[Random.Range(0, tilePrefabs.Count - 1)];
 
         if (tile != null && item != null)
-            tilePoolManager.AddCachedObject(tile, item, position);
+            tilePoolManager.AddCachedObject(tile, item, position, item.name);
     }
 
 }

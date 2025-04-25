@@ -105,12 +105,6 @@ public class PathGenerator: MonoBehaviour
     public void AddTile(Vector3Int pos, GameObject prefab)
     {
         var lastTile = _tilePoolManager.AddTile(pos, prefab);
-
-        if(Random.Range(0, 10) < 3)
-        {
-            _tilePoolManager.AddCachedObject(lastTile, GetRandomInList(collectableItemPrefabs));
-        }
-
         obstacleGenerator.GenerateObstacles(lastTile);
     }
 

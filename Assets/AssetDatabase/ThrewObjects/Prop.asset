@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d47cfa3da29c1734ba05d0d9b32593b4, type: 3}
+  m_Name: Prop
+  m_EditorClassIdentifier: 
+  objectPrefab: {fileID: 5687802696289554574, guid: 1dbc3380871ee554db4b0105cc963764, type: 3}
+  Mass: 200

@@ -29,7 +29,7 @@ public class TestMovement : MonoBehaviour, IMovable
         throw new System.NotImplementedException();
     }
 
-    public void ChangeTrace(int traceX)
+    public void Jump()
     {
         throw new System.NotImplementedException();
     }

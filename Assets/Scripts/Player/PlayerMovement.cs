@@ -32,6 +32,8 @@ public class PlayerMovement : MonoBehaviour, IMovable
 
     [SerializeField] private float _verticalSpeedToStartFall = 1f;
     [SerializeField] private float heightToCheck;
+    [SerializeField] private float jumpForce = 10000f;
+    [SerializeField] private Vector3 velocity = Vector3.zero;
 
     private float nextX = 0;
 
@@ -68,19 +70,16 @@ public class PlayerMovement : MonoBehaviour, IMovable
 
         _rb.MoveRotation(Quaternion.RotateTowards(_rb.rotation, Quaternion.LookRotation(_forwardDirection), _angularSpeed / 5f));
 
+        //velocity = Vector3.zero;
+        _rb.position += velocity * Time.fixedDeltaTime;
     }
 
-    public void ChangeTrace(int traceX)
+    public void Jump()
     {
         if (_isGrounded)
         {
-            _rb.position = new Vector3(traceX, 
-                                            _rb.position.y,
-                                            _rb.position.z);
-            _rb.AddForce(Vector3.up * 10000f);
-            _animator.SetTrigger("Jump");
-
-            nextX = traceX;
+            _rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            //_animator.SetTrigger("Jump");
         }
     }
 
@@ -97,18 +96,23 @@ public class PlayerMovement : MonoBehaviour, IMovable
             float speed;
             if (_isRunning)
             {
-                speed = _runningSpeed * speedMultiplier * Time.deltaTime;
-                _animator.SetFloat("HorizontalSpeed", speedMultiplier * 2);
+                speed = _runningSpeed * speedMultiplier;
+                _animator.SetFloat("VerticalSpeed", 1f);
             }
             else
             {
-                speed = _speed * speedMultiplier * Time.deltaTime;
-                _animator.SetFloat("HorizontalSpeed", speedMultiplier);
+                speed = _speed * speedMultiplier;
+                _animator.SetFloat("VerticalSpeed", 0.5f);
             }
 
             var newPosition = _rb.position + speed * direction.normalized;
-            _rb.Move(newPosition, _rb.rotation);
+            //_rb.Move(newPosition, _rb.rotation);
+            velocity = direction.normalized * speed;
+
+            //_rb.linearVelocity += speed * direction.normalized;
             OnMove?.Invoke();
+
+            _animator.SetFloat("HorizontalSpeed", direction.x);
         }
     }
 

@@ -15,6 +15,7 @@ public class PathGenerator: MonoBehaviour
     [SerializeField] private float distanceForCreateTiles = 8f;
 
     [SerializeField] private Vector3Int tileSize = new Vector3Int(2, 0, 2);
+    [SerializeField] private ObstacleGenerator obstacleGenerator;
 
 
     private readonly Vector3Int[] _moveDirections =
@@ -27,8 +28,11 @@ public class PathGenerator: MonoBehaviour
     public void OnEnable()
     {
         CreateTilesHolder();
+    }
 
-        var startPos = Vector3Int.RoundToInt(player.transform.position);
+    public void Start()
+    {
+        var startPos = Vector3Int.zero;
         startPos.y = 0;
 
         GenerateLine(startPos, _moveDirections[1], 10, GetRandomInList(tilePrefabs));
@@ -104,8 +108,10 @@ public class PathGenerator: MonoBehaviour
 
         if(Random.Range(0, 10) < 3)
         {
-            _tilePoolManager.AddCollectItem(lastTile, GetRandomInList(collectableItemPrefabs));
+            _tilePoolManager.AddCachedObject(lastTile, GetRandomInList(collectableItemPrefabs));
         }
+
+        obstacleGenerator.GenerateObstacles(lastTile);
     }
 
     public void GenerateTilesRandom(int count)
@@ -135,13 +141,19 @@ public class PathGenerator: MonoBehaviour
         Destroy(gameObject);
     }
 
+    public Tile GetLastTile()
+    {
+        return _tilePoolManager.LastActivateTile;
+    }
+
     public Tile GetTileInPosition(Vector3 position)
     {
         var tileX = Mathf.CeilToInt(position.x / (float)tileSize.x) * tileSize.x;
         var tileY = Mathf.CeilToInt(position.y / (float)tileSize.y) * tileSize.y;
         var tileZ = Mathf.CeilToInt(position.z / (float)tileSize.z) * tileSize.z;
 
-        return _tilePoolManager.GetTileByPosition(new Vector3Int(tileX, tileY, tileZ));
+        var tile = _tilePoolManager.GetTileByPosition(new Vector3Int(tileX, tileY, tileZ));
+        return tile;
     }
 
     private void OnDestroy()

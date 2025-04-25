@@ -30,6 +30,7 @@ public class PlayerController : MonoBehaviour
         _movement = GetComponent<IMovable>();
         _playerInput = GetComponent<PlayerInput>();
 
+        _playerInput.OnClick = () => { _movement.Jump(); };
         ChangeDirection();
     }
 
@@ -51,5 +52,8 @@ public class PlayerController : MonoBehaviour
     {
         if(_playerInput != null)
             _playerInput.OnClick -= ChangeDirection;
+
+        _playerInput.OnClick = null;
+
     }
 }

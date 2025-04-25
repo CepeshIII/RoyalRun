@@ -8,7 +8,7 @@ public interface IMovable
 {
     public void Move(float speed, Vector3 direction);
     public void ChangeDirection(Vector3 direction);
-    public void ChangeTrace(int traceX);
+    public void Jump();
 
 
     public void ConnectToMoveEvent(IMovableEvent moveEvent);

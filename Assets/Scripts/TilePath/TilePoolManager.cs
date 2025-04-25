@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 public class TilePoolManager : MonoBehaviour
 {
     private Dictionary<string, Queue<Tile>> _initializedTilesPools;
-    private Dictionary<string, List<GameObject>> _initializedCollectableItemLists;
+    private Dictionary<string, List<CachedObject>> _initializedCachedObjectsLists;
     private Dictionary<Vector3Int, Tile> _activeTilesByPosition;
 
     private Transform _collectItemsParent;
@@ -19,13 +19,11 @@ public class TilePoolManager : MonoBehaviour
     public Tile LastActivateTile { get { return lastActivateTile; } }
 
 
-
-
     public void Innit()
     {
         _activeTilesByPosition = new();
         _initializedTilesPools = new();
-        _initializedCollectableItemLists = new();
+        _initializedCachedObjectsLists = new();
 
         _tilesParent = new GameObject("Tiles parent").transform;
         _collectItemsParent = new GameObject("Collect Items parent").transform;
@@ -49,7 +47,7 @@ public class TilePoolManager : MonoBehaviour
             _initializedTilesPools.Add(prefab.name, pool);
         }
 
-        //Checking if pool has a inactive tile. this is for re use a cached tiles
+        //Checking if pool has a inactive tile. this is for re use a cachedd tiles
         if (TryFindInactiveTile(pool, out var tile)) 
         { 
             pool.Dequeue();
@@ -77,35 +75,36 @@ public class TilePoolManager : MonoBehaviour
         return tile;
     }
 
-    public GameObject AddCollectItem(Tile tile, GameObject prefab)
+    public CachedObject AddCachedObject(Tile tile, GameObject prefab)
     {
-        return AddCollectItem(tile, prefab, tile.position);
+        return AddCachedObject(tile, prefab, tile.position);
     }
 
-    public GameObject AddCollectItem(Tile tile, GameObject prefab, Vector3 position)
+    public CachedObject AddCachedObject(Tile tile, GameObject prefab, Vector3 position)
     {
         // Try find list of prefabs with specific name or create one
-        if (!_initializedCollectableItemLists.TryGetValue(prefab.name, out var list))
+        if (!_initializedCachedObjectsLists.TryGetValue(prefab.name, out var list))
         {
             list = new();
-            _initializedCollectableItemLists.Add(prefab.name, list);
+            _initializedCachedObjectsLists.Add(prefab.name, list);
         }
 
-        // Try find inactive object with specific type or create new one, then activate object
-        if (TryFindInactiveCollectableItem(list, out var collectableItem))
+        // Try find unoccupied object with specific type or create new one, then activate object
+        if (TryFindUnoccupiedCachedObject(list, out var cachedObject))
         {
-            ActivateCollectableItem(collectableItem, position);
+            ActivateCachedObject(cachedObject, position, prefab.name);
         }
         else
         {
-            collectableItem = InstantiateCollectItem(position, prefab);
-            list.Add(collectableItem);
+            cachedObject = InstantiateCachedObject(position, prefab);
+            list.Add(cachedObject);
         }
 
         // Add reference to collectable item to tile where it there is
-        tile.collectableItems.Add(collectableItem);
+        tile.cachedObjects.Add(cachedObject);
+        cachedObject.Reserve();
 
-        return collectableItem;
+        return cachedObject;
     }
 
     public void HideTile(Vector3Int position)
@@ -117,15 +116,15 @@ public class TilePoolManager : MonoBehaviour
         }
     }
 
-    private bool TryFindInactiveCollectableItem(List<GameObject> collectableItems, 
-        out GameObject foundCollectableItem)
+    private bool TryFindUnoccupiedCachedObject(List<CachedObject> cachedObjects, 
+        out CachedObject foundCachedObject)
     {
-        foundCollectableItem = null;
-        foreach (var collectableItem in collectableItems)
+        foundCachedObject = null;
+        foreach (var cachedObject in cachedObjects)
         {
-            if (!collectableItem.activeSelf)
+            if (!cachedObject.isBusy)
             {
-                foundCollectableItem = collectableItem;
+                foundCachedObject = cachedObject;
                 return true;
             }
         }
@@ -158,19 +157,20 @@ public class TilePoolManager : MonoBehaviour
         return tile;
     }
 
-    public GameObject InstantiateCollectItem(Vector3 position, GameObject prefab)
+    public CachedObject InstantiateCachedObject(Vector3 position, GameObject prefab)
     {
         var collectItem = Instantiate(prefab, _collectItemsParent);
-        ActivateCollectableItem(collectItem, position);
+        var cachedObject = collectItem.AddComponent<CachedObject>();
+        ActivateCachedObject(cachedObject, position, prefab.name);
 
-        return collectItem;
+        return cachedObject;
     }
 
-    public void ActivateCollectableItem(GameObject collectableItem, Vector3 position)
+    public void ActivateCachedObject(CachedObject cachedObject, Vector3 position, string name = "CachedObject")
     {
-        collectableItem.SetActive(true);
-        collectableItem.name = $"CollectableItem: {position}";
-        collectableItem.transform.position = position + Vector3Int.up;
+        cachedObject.Activate();
+        cachedObject.name = $"{name}: {position}";
+        cachedObject.transform.position = position;
     }
 
     public void DestroyTiles()
@@ -205,15 +205,15 @@ public class TilePoolManager : MonoBehaviour
 
     public void DestroyCollectableItems()
     {
-        foreach (var keys in _initializedCollectableItemLists.Keys)
+        foreach (var keys in _initializedCachedObjectsLists.Keys)
         {
-            foreach (var collectableItem in _initializedCollectableItemLists[keys])
+            foreach (var collectableItem in _initializedCachedObjectsLists[keys])
             {
                 if (collectableItem != null)
                     Destroy(collectableItem);
             }
         }
-        _initializedCollectableItemLists.Clear();
+        _initializedCachedObjectsLists.Clear();
     }
 
     public Tile GetTileByPosition(Vector3Int pos)
@@ -240,5 +240,6 @@ public class TilePoolManager : MonoBehaviour
     {
         Destroy(tile.tileObject);
     }
+
 
 }

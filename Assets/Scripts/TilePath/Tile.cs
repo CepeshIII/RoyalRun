@@ -6,7 +6,7 @@ public class Tile
     public string Name;
 
     public GameObject tileObject;
-    public List<GameObject> collectableItems;
+    public List<CachedObject> cachedObjects;
 
     public Vector3Int position;
     public Vector3Int nextTilePos;
@@ -20,7 +20,7 @@ public class Tile
         this.tileObject = tileObject;
         SetPosition(position);
         SetName($"Tile {position}");
-        collectableItems = new List<GameObject>();
+        cachedObjects = new ();
     }
 
     private void SetName(string name)
@@ -45,7 +45,7 @@ public class Tile
 
     public void ResetParameters()
     {
-        collectableItems.Clear();
+        cachedObjects.Clear();
         nextTilePos = Vector3Int.zero;
         IsLastInPath = false;
     }
@@ -53,14 +53,17 @@ public class Tile
     public void Deactivate()
     {
         tileObject.SetActive(false);
-        if (collectableItems != null)
+        if (cachedObjects != null)
         {
-            foreach (var item in collectableItems)
+            foreach (var item in cachedObjects)
             {
                 if (item != null)
-                    item.SetActive(false);
+                {
+                    item.Deactivate();
+                    item.Unreserve();
+                }
             }
-            collectableItems.Clear();
+            cachedObjects.Clear();
         }
     }
 }

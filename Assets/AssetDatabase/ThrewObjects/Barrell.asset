@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d47cfa3da29c1734ba05d0d9b32593b4, type: 3}
+  m_Script: {fileID: 11500000, guid: 2d6e5b65b8b5b974a9d5f34d641adb4e, type: 3}
   m_Name: Barrell
   m_EditorClassIdentifier: 
   objectPrefab: {fileID: 2324050925044277620, guid: 01b0d7cd3288fb04aa0c7ed55acafb11, type: 3}

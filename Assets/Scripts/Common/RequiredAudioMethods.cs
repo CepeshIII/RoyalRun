@@ -15,6 +15,7 @@ public static class RequiredAudioMethods
         audioSource.outputAudioMixerGroup = audioMixerGroup;
         audioSource.resource = audioResource;
         audioSource.spatialBlend = 1f;
+        audioSource.dopplerLevel = 0f;
         audioSource.volume = volume;
         audioSource.Play();
 

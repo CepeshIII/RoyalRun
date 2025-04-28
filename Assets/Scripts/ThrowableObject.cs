@@ -3,7 +3,13 @@ using UnityEngine;
 
 public class ThrowableObject : MonoBehaviour
 {
+    private AudioSource m_AudioSource;
     private GameObject _visualPart;
+
+    private void OnEnable()
+    {
+        m_AudioSource = GetComponent<AudioSource>();
+    }
 
     public void Initialize(ThrowableObjectType throwableObject)
     {
@@ -24,4 +30,12 @@ public class ThrowableObject : MonoBehaviour
         }
     }
 
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (m_AudioSource != null) 
+        {
+            m_AudioSource.Play();
+        }
+    }
 }

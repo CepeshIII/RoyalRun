@@ -24,7 +24,7 @@ public class ObstacleGenerator : MonoBehaviour
         for (int z = -mapCapacity.y; z < mapCapacity.y; z += gridSize.z)
         {
             int positionZ= position.z + z;
-            for (int x = -mapCapacity.x; x < mapCapacity.x; x += gridSize.x)
+            for (int x = -mapCapacity.x; x <= mapCapacity.x; x += gridSize.x)
             {
                 int positionX = position.x + x;
                 if (Random.Range(0, 5) == 1) 

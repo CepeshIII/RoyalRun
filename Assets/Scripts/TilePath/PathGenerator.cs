@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
 using Random = UnityEngine.Random;
 
 public class PathGenerator: MonoBehaviour
@@ -9,14 +8,17 @@ public class PathGenerator: MonoBehaviour
 
     [SerializeField] private List<GameObject> tilePrefabs;
     [SerializeField] private List<GameObject> collectableItemPrefabs;
+    [SerializeField] private GameObject checkPointPrefab;
     [SerializeField] private Player player;
 
     [SerializeField] private float distanceForDeleteTiles = 6f;
     [SerializeField] private float distanceForCreateTiles = 8f;
+    [SerializeField] private float countOfTileBetweenCheckPoint = 5;
 
     [SerializeField] private Vector3Int tileSize = new Vector3Int(2, 0, 2);
     [SerializeField] private ObstacleGenerator obstacleGenerator;
 
+    private int numberOfTilesAfterLastCheckPoint = 0;
 
     private readonly Vector3Int[] _moveDirections =
     {
@@ -70,6 +72,7 @@ public class PathGenerator: MonoBehaviour
         {
             var distantToEndStart = Vector3.Distance(_tilePoolManager.LastActivateTile.position,
                                         player.transform.position);
+
             if (distantToEndStart < distanceForCreateTiles)
             {
                 GenerateTilesRandom(1);
@@ -106,6 +109,16 @@ public class PathGenerator: MonoBehaviour
     {
         var lastTile = _tilePoolManager.AddTile(pos, prefab);
         obstacleGenerator.GenerateObstacles(lastTile);
+
+        if(numberOfTilesAfterLastCheckPoint >= countOfTileBetweenCheckPoint)
+        {
+            numberOfTilesAfterLastCheckPoint = 0;
+            _tilePoolManager.AddCachedObject(lastTile, checkPointPrefab, checkPointPrefab.name);
+        }
+        else
+        {
+            numberOfTilesAfterLastCheckPoint++;
+        }
     }
 
     public void GenerateTilesRandom(int count)

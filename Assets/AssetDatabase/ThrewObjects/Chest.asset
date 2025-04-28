@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d47cfa3da29c1734ba05d0d9b32593b4, type: 3}
+  m_Script: {fileID: 11500000, guid: 2d6e5b65b8b5b974a9d5f34d641adb4e, type: 3}
   m_Name: Chest
   m_EditorClassIdentifier: 
   objectPrefab: {fileID: 2021561019665095465, guid: 7e6fb34f368d7a24e862ec8f79407d75, type: 3}
-  Mass: 100
+  Mass: 150

@@ -24,7 +24,7 @@ public class ThrowableObjectManager : MonoBehaviour
         position.y = 0;
         position.x = 0;
         var tile = PathGenerator.GetLastTile();
-        var throwableObjectType = throwableObjectTypes[Random.Range(0, throwableObjectTypes.Count - 1)];
+        var throwableObjectType = throwableObjectTypes[Random.Range(0, throwableObjectTypes.Count)];
 
         if(tile != null && throwableObjectMainPartPrefab != null)
         {
@@ -49,6 +49,7 @@ public class ThrowableObjectManager : MonoBehaviour
         {
             rb.angularVelocity = Vector3.zero;
             rb.linearVelocity = Vector3.zero;
+            rb.rotation = Quaternion.LookRotation(new Vector3(Random.value, Random.value, Random.value));
 
             var direction = Player.transform.position - transform.position;
             var force = direction.normalized * throwForce;

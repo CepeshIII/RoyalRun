@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 559280201367759319}
   - component: {fileID: 6201014285368622913}
   - component: {fileID: 5685085406630625940}
+  - component: {fileID: 3013858537160862825}
   m_Layer: 8
   m_Name: Cube
   m_TagString: Untagged
@@ -109,6 +110,21 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3013858537160862825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2328984277664254335}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 373d88b5705db3e4f9bea854ec823383, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  checkPointManager: {fileID: 0}
+  textMeshPro: {fileID: 0}
+  addTime: 0
 --- !u!1 &4618388471518325028
 GameObject:
   m_ObjectHideFlags: 0
@@ -135,7 +151,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4618388471518325028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.66}
+  m_LocalPosition: {x: 0, y: 0, z: -1.07}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -143,7 +159,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0.063}
+  m_AnchoredPosition: {x: 0, y: 0.328}
   m_SizeDelta: {x: 20, y: 5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!23 &4537621730147095262
@@ -245,8 +261,8 @@ MonoBehaviour:
   m_fontSizeMin: 0.1
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -276,7 +292,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 9.569104, y: 2.3711553, z: 9.6020775, w: 1.9551573}
+  m_margin: {x: 9.569104, y: 2.3711553, z: 9.6020775, w: 2.1062098}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   _SortingLayer: 0
@@ -294,6 +310,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3808004309228061323}
+  - component: {fileID: 5709932437377151781}
   m_Layer: 0
   m_Name: CheckPoint
   m_TagString: Untagged
@@ -324,6 +341,21 @@ Transform:
   - {fileID: 6812133443092595369}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5709932437377151781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6354140456993334996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 373d88b5705db3e4f9bea854ec823383, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  checkPointManager: {fileID: 0}
+  textMeshPro: {fileID: 4438662760549234118}
+  addTime: 5
 --- !u!1001 &1143677067470921792
 PrefabInstance:
   m_ObjectHideFlags: 0

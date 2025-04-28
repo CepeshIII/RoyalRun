@@ -20,7 +20,7 @@ public class PlayerCollisionManager : MonoBehaviour
         if (IsInLayerMask(other.gameObject, obstaclesMask))
         {
             _animator.SetTrigger("Stumbled");
-
+            GetComponent<PlayerMovement>().
         }
     }
 

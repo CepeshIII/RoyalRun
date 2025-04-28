@@ -14,6 +14,8 @@ public class PlayerMovement : MonoBehaviour, IMovable
     private IMovableEvent OnMove;
     private MovementEventsContainer _movementEventsContainer;
 
+    public IMovableEvent OnStumbled;
+
     [SerializeField] private Rigidbody _rb;
     [SerializeField] private bool _isFalling = false;
     [SerializeField] private Animator _animator;
@@ -149,6 +151,11 @@ public class PlayerMovement : MonoBehaviour, IMovable
         }
 
         return IsGrounded;
+    }
+
+    public void Stumble()
+    {
+
     }
 
     //private void OnCollisionEnter(Collision collision)

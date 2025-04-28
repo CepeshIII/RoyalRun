@@ -8,6 +8,10 @@ public class GameManager: MonoBehaviour
     [SerializeField] PathGenerator pathGenerator;
     [SerializeField] SceneLoader sceneLoader;
     [SerializeField] ScoreManager scoreManager;
+    [SerializeField] GameTimer gameTimer;
+    [SerializeField] CheckPointManager checkPointManager;
+
+    [SerializeField] float startTime = 14.88f;
 
     private bool isGameOver = false;
 
@@ -24,12 +28,27 @@ public class GameManager: MonoBehaviour
         if (scoreManager == null)
             GameObject.FindGameObjectWithTag("ScoreManager")
                 .TryGetComponent<ScoreManager>(out scoreManager);
-        
+
+        gameTimer = gameObject.AddComponent<GameTimer>();
+        if (gameTimer != null)
+            gameTimer.OnTimerEnd += GameOver;
+
+        checkPointManager = (CheckPointManager)CheckPointManager.Instance;
+        if(checkPointManager != null)
+            checkPointManager.onCheckPointPassed += gameTimer.AddTime;
+    }
+
+    private void Start()
+    {
+        if(gameTimer!= null)
+            gameTimer.SetTimer(startTime);
     }
 
     private void Update()
     {
         CheckIfGameOver();
+        if (gameTimer != null)
+            gameTimer.UpdateTime();
     }
 
     private void CheckIfGameOver()
@@ -60,5 +79,13 @@ public class GameManager: MonoBehaviour
         sceneLoader.LoadMenuScene();
         pathGenerator.Destroy();
         isGameOver = true;
+    }
+
+    private void OnDisable()
+    {
+        if (gameTimer != null)
+            Destroy(gameTimer);
+
+        checkPointManager.onCheckPointPassed -= gameTimer.AddTime;
     }
 }

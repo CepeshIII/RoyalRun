@@ -2,7 +2,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
-public class MusicManager : Singleton
+public class MusicManager : Singleton<MusicManager>
 {
     [SerializeField] private AudioSource _musicSource;
 

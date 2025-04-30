@@ -44,7 +44,7 @@ public class TestMovement : MonoBehaviour, IMovable
         throw new System.NotImplementedException();
     }
 
-    public MovementEventsContainer GetMovementEventsContainer()
+    public MovementEventsContainer GetEventsContainer()
     {
         throw new System.NotImplementedException();
     }

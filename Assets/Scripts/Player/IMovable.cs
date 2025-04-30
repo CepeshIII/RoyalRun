@@ -4,6 +4,11 @@ using UnityEngine;
 
 public delegate void IMovableEvent();
 
+public class MovementEventsContainer
+{
+    public IMovableEvent OnMove;
+}
+
 public interface IMovable
 {
     public void Move(float speed, Vector3 direction);
@@ -15,6 +20,5 @@ public interface IMovable
 
     public void DisconnectFromMoveEvent(IMovableEvent moveEvent);
 
-    public MovementEventsContainer GetMovementEventsContainer();
-
+    public MovementEventsContainer GetEventsContainer();
 }

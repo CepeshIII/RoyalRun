@@ -9,6 +9,7 @@ public class Player: MonoBehaviour
     public PlayerEvent OnItemCollect;
     public PlayerEvent OnPlayerFall;
     public PlayerEvent OnPlayerWalk;
+    public PlayerEvent OnPlayerStumble;
 
     private IMovable _movement;
 
@@ -22,14 +23,9 @@ public class Player: MonoBehaviour
 
     private void OnEnable()
     {
-        _movement = GetComponent<IMovable>();
-        if(_movement != null ) 
-            _movement.GetMovementEventsContainer().OnFall += () => OnPlayerFall?.Invoke();
     }
 
     private void OnDestroy()
     {
-        if (_movement != null) 
-            _movement.GetMovementEventsContainer().OnFall -= () => OnPlayerFall?.Invoke();
     }
 }

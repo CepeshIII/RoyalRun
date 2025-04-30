@@ -11,7 +11,7 @@ public class PlayerCollisionManager : MonoBehaviour
     {
         if (IsInLayerMask(collision.gameObject, obstaclesMask))
         {
-            _animator.SetTrigger("Stumbled");
+            Stumble();
         }
     }
 
@@ -19,9 +19,14 @@ public class PlayerCollisionManager : MonoBehaviour
     {
         if (IsInLayerMask(other.gameObject, obstaclesMask))
         {
-            _animator.SetTrigger("Stumbled");
-            GetComponent<PlayerMovement>()?.Stumble();
+            Stumble();
         }
     }
 
+    private void Stumble()
+    {
+        _animator.SetTrigger("Stumbled");
+        GetComponent<PlayerMovement>()?.Stumble();
+        GetComponent<Player>()?.OnPlayerStumble();
+    }
 }

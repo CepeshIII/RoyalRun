@@ -2,45 +2,33 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MovementEventsContainer 
-{
-    public IMovableEvent OnMove;
-    public IMovableEvent OnFall;
-}
-
 
 public class PlayerMovement : MonoBehaviour, IMovable
 {
-    private IMovableEvent OnMove;
-    private MovementEventsContainer _movementEventsContainer;
+    private MovementEventsContainer _eventsContainer;
+    public MovementEventsContainer EventsContainer => GetEventsContainer();
 
     public IMovableEvent OnStumbled;
 
-    [SerializeField] private Rigidbody _rb;
-    [SerializeField] private bool _isFalling = false;
-    [SerializeField] private Animator _animator;
     [SerializeField] private CapsuleCollider _collider;
+    [SerializeField] private Rigidbody _rb;
+    [SerializeField] private Animator _animator;
 
     [SerializeField] private LayerMask _groundLayerMask;
     [SerializeField] private Vector3 _forwardDirection;
 
     [SerializeField] private float _speed = 5f;
+    [SerializeField] private float acceleration = 1f;
     [SerializeField] private float _runningSpeed = 10f;
-
     [SerializeField] private float _angularSpeed = 5f;
+    [SerializeField] private float jumpForce = 10000f;
+    [SerializeField] private float heightToCheckGround;
 
+    [SerializeField] private bool _isFalling = false;
     [SerializeField] private bool _isRunning = false;
     [SerializeField] private bool _isGrounded = false;
 
-    [SerializeField] private float _verticalSpeedToStartFall = 1f;
-    [SerializeField] private float heightToCheck;
-    [SerializeField] private float jumpForce = 10000f;
-    [SerializeField] private float acceleration = 1f;
-
     private Vector3 velocity = Vector3.zero;
-    private float nextX = 0;
-
-
     private RaycastHit _hit;
 
     private void OnEnable()
@@ -58,6 +46,15 @@ public class PlayerMovement : MonoBehaviour, IMovable
         else
         {
             _isRunning = false;
+     
+        }
+    }
+
+    private void Start()
+    {
+        if (_isFalling) 
+        {
+            _isGrounded = false;
         }
     }
 
@@ -69,11 +66,8 @@ public class PlayerMovement : MonoBehaviour, IMovable
             _rb.MoveRotation(Quaternion.RotateTowards(_rb.rotation, Quaternion.LookRotation(_forwardDirection), _angularSpeed));
         }
 
-        CheckIfFalling();
-
         _rb.MoveRotation(Quaternion.RotateTowards(_rb.rotation, Quaternion.LookRotation(_forwardDirection), _angularSpeed / 5f));
 
-        //velocity = Vector3.zero;
         _rb.position += velocity * Time.fixedDeltaTime;
         _animator.SetFloat("VerticalSpeed", Mathf.InverseLerp(0f, _runningSpeed, velocity.magnitude));
 
@@ -84,7 +78,7 @@ public class PlayerMovement : MonoBehaviour, IMovable
         if (_isGrounded)
         {
             _rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            //_animator.SetTrigger("Jump");
+            _animator.SetTrigger("Jump");
         }
     }
 
@@ -110,40 +104,16 @@ public class PlayerMovement : MonoBehaviour, IMovable
                 _animator.SetFloat("VerticalSpeed", 0.5f);
             }
 
-
             var newPosition = _rb.position + speed * direction.normalized;
-            //_rb.Move(newPosition, _rb.rotation);
-
             var newVelocity = direction.normalized * speed;
 
             _animator.SetFloat("VerticalSpeed", Mathf.InverseLerp(0f, speed, velocity.magnitude));
             velocity = Vector3.Lerp(velocity, newVelocity, acceleration);
 
-            //_rb.linearVelocity += speed * direction.normalized;
-            OnMove?.Invoke();
+            EventsContainer.OnMove?.Invoke();
 
             _animator.SetFloat("HorizontalSpeed", direction.x);
         }
-    }
-
-    public void CheckIfFalling()
-    {
-        var isFalling = (_rb.linearVelocity.y) < -_verticalSpeedToStartFall;
-        var startToFall = isFalling && !_isFalling;
-        var stopFalling = !isFalling && _isFalling;
-
-        if (startToFall)
-        {
-            _isFalling = true;
-            _forwardDirection = Vector3.forward;
-            _movementEventsContainer.OnFall?.Invoke();
-        }
-        else if (stopFalling)
-        {
-            _isFalling = false;
-        }
-
-        _animator.SetBool("Falling", _isFalling);
     }
 
     public bool IsGrounded()
@@ -152,10 +122,11 @@ public class PlayerMovement : MonoBehaviour, IMovable
         var direction = Vector3.down;
 
         var IsGrounded = Physics.Raycast(position, direction, 
-                                    out _hit, _collider.height + heightToCheck);
+                                    out _hit, _collider.height + heightToCheckGround);
         if (IsGrounded) 
         {
-            //Debug.Log("Height: " + Vector3.Distance(_hit.point, position));
+            _isFalling = false;
+            _animator.SetBool("Falling", _isFalling);
         }
 
         return IsGrounded;
@@ -166,27 +137,22 @@ public class PlayerMovement : MonoBehaviour, IMovable
         velocity = Vector3.zero;
     }
 
-    //private void OnCollisionEnter(Collision collision)
-    //{
-    //    _isFalling = !IsGrounded();
-    //    _animator.SetBool("Falling", _isFalling);
-    //}
 
     public void ConnectToMoveEvent(IMovableEvent moveEvent)
     {
-        OnMove += moveEvent;
+        EventsContainer.OnMove += moveEvent;
     }
 
     public void DisconnectFromMoveEvent(IMovableEvent moveEvent)
     {
-        if(OnMove != null)
-            OnMove -= moveEvent;
+        if(EventsContainer.OnMove != null)
+            EventsContainer.OnMove -= moveEvent;
     }
 
-    public MovementEventsContainer GetMovementEventsContainer()
-    {
-        if (_movementEventsContainer == null)
-            _movementEventsContainer = new MovementEventsContainer();
-        return _movementEventsContainer;
+    public MovementEventsContainer GetEventsContainer()
+    { 
+        if (_eventsContainer == null)
+            _eventsContainer = new MovementEventsContainer();
+        return _eventsContainer;
     }
 }

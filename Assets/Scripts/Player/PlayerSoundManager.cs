@@ -8,23 +8,23 @@ public class PlayerSoundManager : MonoBehaviour
     [SerializeField] private Player _player;
 
     [SerializeField] private AudioSource _walkAudioSource;
+    [SerializeField] private AudioData _stumbleAudioData;
 
     void OnEnable()
     {
         _player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         _player.OnPlayerWalk += PlayWalkSound;
+        _player.OnPlayerStumble += PlayStumbleSound;
     }
-
 
     private void PlayWalkSound()
     {
         _walkAudioSource?.Play();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void PlayStumbleSound()
     {
-        
+        RequiredAudioMethods.PlayResourcesAtPoint(_stumbleAudioData, _player.transform.position);
     }
 
     private void OnDestroy()

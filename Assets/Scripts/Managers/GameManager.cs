@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections;
-using System.Xml.Linq;
 using UnityEngine;
-using UnityEngine.Assertions;
 using UnityEngine.SceneManagement;
 
 public delegate void GameEvents();
@@ -48,13 +46,6 @@ public class GameManager: MonoBehaviour
             checkPointManager.onCheckPointPassed += CheckPointPassed;
 
         ConnectGameSoundManager();
-
-        Assert.IsNotNull(player);
-        Assert.IsNotNull(pathGenerator);
-        Assert.IsNotNull(sceneLoader);
-        Assert.IsNotNull(scoreManager);
-        Assert.IsNotNull(gameTimer);
-        Assert.IsNotNull(checkPointManager);
     }
 
     private void Start()

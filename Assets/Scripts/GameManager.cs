@@ -1,15 +1,25 @@
 ﻿using System;
+using System.Collections;
+using System.Xml.Linq;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.SceneManagement;
 
+public delegate void GameEvents();
 public class GameManager: MonoBehaviour
 {
+    public GameEvents OnStartGame;
+    public GameEvents OnGameOver;
+    public GameEvents OnCheckPointPass;
+
     [SerializeField] Player player;
     [SerializeField] PathGenerator pathGenerator;
     [SerializeField] SceneLoader sceneLoader;
     [SerializeField] ScoreManager scoreManager;
     [SerializeField] GameTimer gameTimer;
     [SerializeField] CheckPointManager checkPointManager;
+    [SerializeField] GameSoundManager gameSoundManager;
+    
 
     [SerializeField] float startTime = 14.88f;
 
@@ -31,17 +41,27 @@ public class GameManager: MonoBehaviour
 
         gameTimer = gameObject.AddComponent<GameTimer>();
         if (gameTimer != null)
-            gameTimer.OnTimerEnd += GameOver;
+            gameTimer.OnTimerEnd += StartGameOver;
 
         checkPointManager = (CheckPointManager)CheckPointManager.Instance;
-        if(checkPointManager != null)
-            checkPointManager.onCheckPointPassed += gameTimer.AddTime;
+        if (checkPointManager != null)
+            checkPointManager.onCheckPointPassed += CheckPointPassed;
+
+        ConnectGameSoundManager();
+
+        Assert.IsNotNull(player);
+        Assert.IsNotNull(pathGenerator);
+        Assert.IsNotNull(sceneLoader);
+        Assert.IsNotNull(scoreManager);
+        Assert.IsNotNull(gameTimer);
+        Assert.IsNotNull(checkPointManager);
     }
 
     private void Start()
     {
         if(gameTimer!= null)
             gameTimer.SetTimer(startTime);
+        OnStartGame?.Invoke();
     }
 
     private void Update()
@@ -51,11 +71,24 @@ public class GameManager: MonoBehaviour
             gameTimer.UpdateTime();
     }
 
+    public void ConnectGameSoundManager()
+    {
+        gameSoundManager = (GameSoundManager)GameSoundManager.Instance;
+        if (gameSoundManager == null)
+        {
+            Debug.LogError("gameSoundManager is null");
+        }
+
+        OnStartGame += gameSoundManager.PlayStartGameSound;
+        OnCheckPointPass += gameSoundManager.PlayCheckPointPassSound;
+        OnGameOver += gameSoundManager.PlayGameOverSound;
+    }
+
     private void CheckIfGameOver()
     {
         if(player.transform.position.y < -20 && !isGameOver)
         {
-            GameOver();
+            StartGameOver();
         }
     }
 
@@ -70,15 +103,40 @@ public class GameManager: MonoBehaviour
         }
 
         PlayerPrefs.SetInt("LastScore", currentResult);
-
     }
 
-    private void GameOver()
+    private void CheckPointPassed(float addTime)
     {
+        gameTimer.AddTime(addTime);
+        OnCheckPointPass?.Invoke(); 
+    }
+
+    private void StartGameOver()
+    {
+        if(!isGameOver)
+            StartCoroutine(GameOver());
+    }
+
+    private IEnumerator GameOver()
+    {
+        isGameOver = true;
+        OnGameOver?.Invoke();
         SavePlayerStats();
+        player.gameObject.SetActive(false);
+
+        yield return new WaitForSeconds(2f);
         sceneLoader.LoadMenuScene();
         pathGenerator.Destroy();
-        isGameOver = true;
+    }
+
+
+    public void DisconnectGameSoundManager()
+    {
+        if (gameSoundManager == null) return;
+
+        OnStartGame -= gameSoundManager.PlayStartGameSound;
+        OnCheckPointPass -= gameSoundManager.PlayCheckPointPassSound;
+        OnGameOver -= gameSoundManager.PlayGameOverSound;
     }
 
     private void OnDisable()
@@ -86,6 +144,9 @@ public class GameManager: MonoBehaviour
         if (gameTimer != null)
             Destroy(gameTimer);
 
-        checkPointManager.onCheckPointPassed -= gameTimer.AddTime;
+        if(checkPointManager != null)
+            checkPointManager.onCheckPointPassed -= CheckPointPassed;
+
+        DisconnectGameSoundManager();
     }
 }

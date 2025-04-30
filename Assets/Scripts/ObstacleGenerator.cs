@@ -27,11 +27,11 @@ public class ObstacleGenerator : MonoBehaviour
             for (int x = -mapCapacity.x; x <= mapCapacity.x; x += gridSize.x)
             {
                 int positionX = position.x + x;
-                if (Random.Range(0, 5) == 1) 
+                if (Random.Range(0, 6) == 1) 
                 {
                     CreateObstacle(tile, new Vector3Int(positionX, 0, positionZ));
                 }
-                else if(Random.Range(0, 6) == 1)
+                else if(Random.Range(0, 7) == 1)
                 {
                     CreateCollectableItem(tile, new Vector3Int(positionX, 1, positionZ));
                 }

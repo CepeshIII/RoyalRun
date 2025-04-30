@@ -141,10 +141,13 @@ public class PathGenerator: MonoBehaviour
     {
         _tilePoolManager.Clear();
 
-        _tilePoolManager.gameObject.SetActive(false);
-        this.gameObject.SetActive(false);
+        if( _tilePoolManager != null)
+        {
+            _tilePoolManager.gameObject.SetActive(false);
+            Destroy(_tilePoolManager.gameObject);
+        }
 
-        Destroy(_tilePoolManager.gameObject);
+        this.gameObject.SetActive(false);
         Destroy(gameObject);
     }
 

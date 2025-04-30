@@ -35,8 +35,9 @@ public class PlayerMovement : MonoBehaviour, IMovable
     [SerializeField] private float _verticalSpeedToStartFall = 1f;
     [SerializeField] private float heightToCheck;
     [SerializeField] private float jumpForce = 10000f;
-    [SerializeField] private Vector3 velocity = Vector3.zero;
+    [SerializeField] private float acceleration = 1f;
 
+    private Vector3 velocity = Vector3.zero;
     private float nextX = 0;
 
 
@@ -74,6 +75,8 @@ public class PlayerMovement : MonoBehaviour, IMovable
 
         //velocity = Vector3.zero;
         _rb.position += velocity * Time.fixedDeltaTime;
+        _animator.SetFloat("VerticalSpeed", Mathf.InverseLerp(0f, _runningSpeed, velocity.magnitude));
+
     }
 
     public void Jump()
@@ -107,9 +110,14 @@ public class PlayerMovement : MonoBehaviour, IMovable
                 _animator.SetFloat("VerticalSpeed", 0.5f);
             }
 
+
             var newPosition = _rb.position + speed * direction.normalized;
             //_rb.Move(newPosition, _rb.rotation);
-            velocity = direction.normalized * speed;
+
+            var newVelocity = direction.normalized * speed;
+
+            _animator.SetFloat("VerticalSpeed", Mathf.InverseLerp(0f, speed, velocity.magnitude));
+            velocity = Vector3.Lerp(velocity, newVelocity, acceleration);
 
             //_rb.linearVelocity += speed * direction.normalized;
             OnMove?.Invoke();
@@ -155,7 +163,7 @@ public class PlayerMovement : MonoBehaviour, IMovable
 
     public void Stumble()
     {
-
+        velocity = Vector3.zero;
     }
 
     //private void OnCollisionEnter(Collision collision)

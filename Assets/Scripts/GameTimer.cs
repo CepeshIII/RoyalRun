@@ -23,11 +23,14 @@ public class GameTimer : MonoBehaviour
 
     public void UpdateTime()
     {
-        _time -= Time.deltaTime;
 
         if( _time <= 0f)
         {
             OnTimerEnd?.Invoke();
+        }
+        else
+        {
+            _time -= Time.deltaTime;
         }
         UpdateShower();
     }

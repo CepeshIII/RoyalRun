@@ -5,7 +5,7 @@ public class CheckPoint : MonoBehaviour
 {
     [SerializeField] CheckPointManager checkPointManager;
     [SerializeField] TextMeshPro textMeshPro;
-    float addTime = 10f;
+    float addTime = 8f;
 
     private void OnEnable()
     {

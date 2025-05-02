@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dde20d982868434a980cb2cc21b26eb, type: 3}
+  m_Name: King
+  m_EditorClassIdentifier: 
+  PlayerBody: {fileID: 919132149155446097, guid: c349c914fdd739041b58a931c9682720, type: 3}
+  avatar: {fileID: 9000000, guid: c349c914fdd739041b58a931c9682720, type: 3}
+  animatorController: {fileID: 9100000, guid: 20c6a31114fbb1c4d9f9186272ceba2f, type: 2}
+  applyRootMotion: 0

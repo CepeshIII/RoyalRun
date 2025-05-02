@@ -11,12 +11,34 @@ public class ThrowableObjectManager : MonoBehaviour
 
     [SerializeField] private TilePoolManager TilePoolManager;
     [SerializeField] private PathGenerator PathGenerator;
-    [SerializeField] private Player Player;
+    [SerializeField] private GameManager gameManager;
     [SerializeField] private float throwForce = 100f;
     [SerializeField] private float distanceForSpawn = 20f;
 
     [SerializeField] float timerToSpawn = 1f;
      float timeDelay = 0f;
+
+    private void OnEnable()
+    {
+        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+    }
+
+    private void Start()
+    {
+        TilePoolManager = GameObject.FindGameObjectWithTag("TilePoolManager").GetComponent<TilePoolManager>();
+    }
+
+    private void Update()
+    {
+        transform.position = gameManager.Player.transform.position + Vector3.forward * distanceForSpawn;
+
+        timeDelay += Time.deltaTime;
+        if (timeDelay >= timerToSpawn)
+        {
+            timeDelay = 0f;
+            ThrowObject();
+        }
+    }
 
     private void ThrowObject()
     {
@@ -51,26 +73,9 @@ public class ThrowableObjectManager : MonoBehaviour
             rb.linearVelocity = Vector3.zero;
             rb.rotation = Quaternion.LookRotation(new Vector3(Random.value, Random.value, Random.value));
 
-            var direction = Player.transform.position - transform.position;
+            var direction = gameManager.Player.transform.position - transform.position;
             var force = direction.normalized * throwForce;
             rb.AddForce(force, ForceMode.Impulse);
-        }
-    }
-    
-    private void Start()
-    {
-        TilePoolManager = GameObject.FindGameObjectWithTag("TilePoolManager").GetComponent<TilePoolManager>();
-    }
-
-    private void Update()
-    {
-        transform.position = Player.transform.position + Vector3.forward * distanceForSpawn;
-
-        timeDelay += Time.deltaTime;
-        if (timeDelay >= timerToSpawn) 
-        {
-            timeDelay = 0f;
-            ThrowObject();
         }
     }
 }

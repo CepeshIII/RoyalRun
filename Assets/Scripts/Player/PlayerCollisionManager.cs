@@ -7,6 +7,12 @@ public class PlayerCollisionManager : MonoBehaviour
 
     public static bool IsInLayerMask(GameObject obj, LayerMask mask) => (mask.value & (1 << obj.layer)) != 0;
 
+    private void OnEnable()
+    {
+        if(_animator == null)
+            _animator = GetComponentInChildren<Animator>();
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (IsInLayerMask(collision.gameObject, obstaclesMask))

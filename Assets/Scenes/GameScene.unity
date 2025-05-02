@@ -119,17 +119,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!114 &31476538 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2421193269455651814, guid: ea6159397191fa7459c1a97e2ba7b014, type: 3}
-  m_PrefabInstance: {fileID: 9021098873635727373}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0687d8ddbec5cff4c80b780407f1b4de, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &55089751
 GameObject:
   m_ObjectHideFlags: 0
@@ -179,7 +168,7 @@ MonoBehaviour:
   collectableItemPrefabs:
   - {fileID: 324053880582137526, guid: 6a5cbec3edd87fe4a8a9397ca185f5d8, type: 3}
   checkPointPrefab: {fileID: 6354140456993334996, guid: e87cba82ff9f0e24aa616eb3b17ed6fa, type: 3}
-  player: {fileID: 31476538}
+  gameManager: {fileID: 0}
   distanceForDeleteTiles: 15
   distanceForCreateTiles: 40
   countOfTileBetweenCheckPoint: 6
@@ -695,6 +684,24 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   CustomBlends: {fileID: 0}
+--- !u!1 &408457609 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6235582524266354306, guid: 744ed3730fdb1a249995c9b52fd0de8b, type: 3}
+  m_PrefabInstance: {fileID: 1164634716}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &408457615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 408457609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1538de2385f7ca742bc4222360acb6db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameManager: {fileID: 0}
 --- !u!1 &565434515
 GameObject:
   m_ObjectHideFlags: 0
@@ -758,7 +765,7 @@ GameObject:
   - component: {fileID: 785103056}
   m_Layer: 0
   m_Name: GameManager
-  m_TagString: Untagged
+  m_TagString: GameManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -790,7 +797,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d10eb0e6e8f0c3d4aafde7ea505ffa32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
+  _player: {fileID: 0}
   pathGenerator: {fileID: 0}
   sceneLoader: {fileID: 1704205114}
   scoreManager: {fileID: 2118087875}
@@ -860,7 +867,7 @@ GameObject:
   - component: {fileID: 902843958}
   - component: {fileID: 902843961}
   m_Layer: 0
-  m_Name: Particle System
+  m_Name: Fog
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -890,7 +897,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: bb9e15f90fb637641b02d53b83931be5, type: 2}
+  - {fileID: 2100000, guid: 3b68fdcea46bb754096a7217f196cf80, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -913,7 +920,7 @@ ParticleSystemRenderer:
   m_SortingOrder: 0
   m_RenderMode: 0
   m_MeshDistribution: 0
-  m_SortMode: 0
+  m_SortMode: 2
   m_MinParticleSize: 0
   m_MaxParticleSize: 0.5
   m_CameraVelocityScale: 0
@@ -934,7 +941,7 @@ ParticleSystemRenderer:
   m_VertexStreams: 00010304
   m_UseCustomTrailVertexStreams: 0
   m_TrailVertexStreams: 00010304
-  m_Mesh: {fileID: 0}
+  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
   m_Mesh1: {fileID: 0}
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
@@ -1026,7 +1033,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 2
+      scalar: 3
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -1079,7 +1086,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 5
+      scalar: 1
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -1886,7 +1893,7 @@ ParticleSystem:
     m_BurstCount: 0
     m_Bursts: []
   SizeModule:
-    enabled: 1
+    enabled: 0
     curve:
       serializedVersion: 2
       minMaxState: 1
@@ -2210,7 +2217,7 @@ ParticleSystem:
         m_RotationOrder: 4
     separateAxes: 0
   ColorModule:
-    enabled: 0
+    enabled: 1
     gradient:
       serializedVersion: 2
       minMaxState: 1
@@ -2219,8 +2226,8 @@ ParticleSystem:
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
-        key1: {r: 1, g: 1, b: 1, a: 0.39215687}
-        key2: {r: 0, g: 0, b: 0, a: 0}
+        key1: {r: 1, g: 1, b: 1, a: 1}
+        key2: {r: 0, g: 0, b: 0, a: 0.5019608}
         key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
         key5: {r: 0, g: 0, b: 0, a: 0}
@@ -2235,9 +2242,9 @@ ParticleSystem:
         ctime6: 0
         ctime7: 0
         atime0: 0
-        atime1: 9830
-        atime2: 65535
-        atime3: 0
+        atime1: 19661
+        atime2: 49151
+        atime3: 65535
         atime4: 0
         atime5: 0
         atime6: 0
@@ -2245,7 +2252,7 @@ ParticleSystem:
         m_Mode: 0
         m_ColorSpace: 0
         m_NumColorKeys: 2
-        m_NumAlphaKeys: 3
+        m_NumAlphaKeys: 4
       minGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -4470,7 +4477,7 @@ ParticleSystem:
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
-        key1: {r: 1, g: 1, b: 1, a: 1}
+        key1: {r: 1, g: 1, b: 1, a: 0}
         key2: {r: 0, g: 0, b: 0, a: 0}
         key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
@@ -4494,7 +4501,7 @@ ParticleSystem:
         atime6: 0
         atime7: 0
         m_Mode: 0
-        m_ColorSpace: -1
+        m_ColorSpace: 0
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
       minGradient:
@@ -5675,7 +5682,7 @@ Transform:
   m_GameObject: {fileID: 902843957}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 6.2, z: 53.91}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5693,9 +5700,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5af0e1c49d2cb144783c7e493728d3f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 31476538}
   position: {x: 0, y: 1}
   distance: 40
+  gameManager: {fileID: 0}
 --- !u!1 &930231062
 GameObject:
   m_ObjectHideFlags: 0
@@ -5934,6 +5941,52 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1 &1051618995
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1051618996}
+  - component: {fileID: 1051618997}
+  m_Layer: 0
+  m_Name: PlayerInitializer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1051618996
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1051618995}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1051618997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1051618995}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dc21a07ef0f0ae4a93c95df06a5527d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerType: {fileID: 11400000, guid: e2f1533e23b8af8469a2d4061a21b18d, type: 2}
+  mainPlayerPrefab: {fileID: 906380278399924790, guid: 4a23aea41c749bb469770827754e95b6, type: 3}
 --- !u!1001 &1164634716
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5989,11 +6042,14 @@ PrefabInstance:
     - target: {fileID: 8251594504992848619, guid: 744ed3730fdb1a249995c9b52fd0de8b, type: 3}
       propertyPath: Target.TrackingTarget
       value: 
-      objectReference: {fileID: 9021098873635727374}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6235582524266354306, guid: 744ed3730fdb1a249995c9b52fd0de8b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 408457615}
   m_SourcePrefab: {fileID: 100100000, guid: 744ed3730fdb1a249995c9b52fd0de8b, type: 3}
 --- !u!114 &1661630516 stripped
 MonoBehaviour:
@@ -6103,7 +6159,7 @@ MonoBehaviour:
   throwableObjectMainPartPrefab: {fileID: 3254996215247811425, guid: c1fbd4bf08ce15043936e13b54e19d14, type: 3}
   TilePoolManager: {fileID: 0}
   PathGenerator: {fileID: 55089753}
-  Player: {fileID: 31476538}
+  gameManager: {fileID: 0}
   throwForce: 1000
   distanceForSpawn: 40
   timerToSpawn: 3
@@ -6547,25 +6603,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 769909179644125236, guid: ea6159397191fa7459c1a97e2ba7b014, type: 3}
-      propertyPath: _isFalling
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 769909179644125236, guid: ea6159397191fa7459c1a97e2ba7b014, type: 3}
-      propertyPath: acceleration
-      value: 0.02
-      objectReference: {fileID: 0}
     - target: {fileID: 906380278399924790, guid: ea6159397191fa7459c1a97e2ba7b014, type: 3}
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 2905649228986045481, guid: ea6159397191fa7459c1a97e2ba7b014, type: 3}
-      propertyPath: _stumbleAudioData.audioResource
-      value: 
-      objectReference: {fileID: 8300000, guid: e8495338b1d9b7840b51a7f6242423b2, type: 3}
-    - target: {fileID: 6509766443674773590, guid: ea6159397191fa7459c1a97e2ba7b014, type: 3}
-      propertyPath: obstaclesMask.m_Bits
-      value: 192
+    - target: {fileID: 906380278399924790, guid: ea6159397191fa7459c1a97e2ba7b014, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7725991475085466298, guid: ea6159397191fa7459c1a97e2ba7b014, type: 3}
       propertyPath: m_LocalPosition.x
@@ -6612,11 +6656,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ea6159397191fa7459c1a97e2ba7b014, type: 3}
---- !u!4 &9021098873635727374 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7725991475085466298, guid: ea6159397191fa7459c1a97e2ba7b014, type: 3}
-  m_PrefabInstance: {fileID: 9021098873635727373}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -6637,3 +6676,4 @@ SceneRoots:
   - {fileID: 902843960}
   - {fileID: 242670089}
   - {fileID: 2005187556}
+  - {fileID: 1051618996}

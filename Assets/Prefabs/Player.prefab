@@ -79,23 +79,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81695a63070ea12469d73e84754ae8df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _rb: {fileID: 0}
-  _isFalling: 0
-  _animator: {fileID: 0}
   _collider: {fileID: 0}
+  _rb: {fileID: 0}
+  _animator: {fileID: 0}
   _groundLayerMask:
     serializedVersion: 2
     m_Bits: 0
   _forwardDirection: {x: 0, y: 0, z: 0}
   _speed: 5
+  acceleration: 0.02
   _runningSpeed: 10
   _angularSpeed: 5
+  jumpForce: 350
+  heightToCheckGround: 0
+  _isFalling: 1
   _isRunning: 1
   _isGrounded: 0
-  _verticalSpeedToStartFall: 5
-  heightToCheck: 0
-  jumpForce: 100
-  velocity: {x: 0, y: 0, z: 0}
 --- !u!114 &7393352626322606057
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -169,7 +168,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   obstaclesMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 192
   _animator: {fileID: 8306469036753477076}
 --- !u!1 &4282602014292566743
 GameObject:
@@ -348,7 +347,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _player: {fileID: 0}
   _walkAudioSource: {fileID: 797731017241396941}
-  _fallSoundAudioSource: {fileID: 180440635754423548}
+  _stumbleAudioData:
+    audioResource: {fileID: 8300000, guid: e8495338b1d9b7840b51a7f6242423b2, type: 3}
+    audioMixerGroup: {fileID: 0}
 --- !u!1 &8664541840765351846
 GameObject:
   m_ObjectHideFlags: 0

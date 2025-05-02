@@ -10,24 +10,35 @@ public class GameManager: MonoBehaviour
     public GameEvents OnGameOver;
     public GameEvents OnCheckPointPass;
 
-    [SerializeField] Player player;
+    [SerializeField] Player _player;
     [SerializeField] PathGenerator pathGenerator;
     [SerializeField] SceneLoader sceneLoader;
     [SerializeField] ScoreManager scoreManager;
     [SerializeField] GameTimer gameTimer;
     [SerializeField] CheckPointManager checkPointManager;
     [SerializeField] GameSoundManager gameSoundManager;
-    
 
     [SerializeField] float startTime = 14.88f;
 
     private bool isGameOver = false;
 
+    public Player Player 
+    { 
+        get
+        { 
+            if (_player != null) 
+                return _player; 
+            else 
+                return GameObject.FindGameObjectWithTag("Player")?.GetComponent<Player>(); 
+        } 
+    }
+
+
     private void OnEnable()
     {
-        if (player == null) 
-            GameObject.FindGameObjectWithTag("Player")
-                .TryGetComponent<Player>(out player);
+        //if (_player == null) 
+        //    GameObject.FindGameObjectWithTag("Player")
+        //        .TryGetComponent<Player>(out _player);
 
         if (pathGenerator == null)
             GameObject.FindGameObjectWithTag("PathGenerator")
@@ -62,6 +73,7 @@ public class GameManager: MonoBehaviour
             gameTimer.UpdateTime();
     }
 
+
     public void ConnectGameSoundManager()
     {
         gameSoundManager = (GameSoundManager)GameSoundManager.Instance;
@@ -77,7 +89,7 @@ public class GameManager: MonoBehaviour
 
     private void CheckIfGameOver()
     {
-        if(player.transform.position.y < -20 && !isGameOver)
+        if(Player.transform.position.y < -20 && !isGameOver)
         {
             StartGameOver();
         }
@@ -113,7 +125,7 @@ public class GameManager: MonoBehaviour
         isGameOver = true;
         OnGameOver?.Invoke();
         SavePlayerStats();
-        player.gameObject.SetActive(false);
+        Player.gameObject.SetActive(false);
 
         yield return new WaitForSeconds(2f);
         sceneLoader.LoadMenuScene();

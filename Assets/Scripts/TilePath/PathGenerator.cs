@@ -9,7 +9,7 @@ public class PathGenerator: MonoBehaviour
     [SerializeField] private List<GameObject> tilePrefabs;
     [SerializeField] private List<GameObject> collectableItemPrefabs;
     [SerializeField] private GameObject checkPointPrefab;
-    [SerializeField] private Player player;
+    [SerializeField] private GameManager gameManager;
 
     [SerializeField] private float distanceForDeleteTiles = 6f;
     [SerializeField] private float distanceForCreateTiles = 8f;
@@ -30,6 +30,7 @@ public class PathGenerator: MonoBehaviour
     public void OnEnable()
     {
         CreateTilesHolder();
+        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
     }
 
     public void Start()
@@ -42,10 +43,6 @@ public class PathGenerator: MonoBehaviour
 
     public void Update()
     {
-        var playerTilePos = Vector3Int.RoundToInt(player.transform.position);
-        playerTilePos.y = 0;
-
-
         if (_tilePoolManager != null)
         {
             ClearPathProcess();
@@ -55,10 +52,11 @@ public class PathGenerator: MonoBehaviour
 
     public void ClearPathProcess()
     {
-        if (_tilePoolManager.FirstActivateTile != null)
+        if (_tilePoolManager.FirstActivateTile != null && 
+            gameManager != null && gameManager.Player != null)
         {
             var distantToPathStart = Vector3.Distance(_tilePoolManager.FirstActivateTile.position,
-                                        player.transform.position);
+                                        gameManager.Player.transform.position);
             if (distantToPathStart > distanceForDeleteTiles)
             {
                 _tilePoolManager.HideFirstTile();
@@ -71,7 +69,7 @@ public class PathGenerator: MonoBehaviour
         if (_tilePoolManager.LastActivateTile != null)
         {
             var distantToEndStart = Vector3.Distance(_tilePoolManager.LastActivateTile.position,
-                                        player.transform.position);
+                                        gameManager.Player.transform.position);
 
             if (distantToEndStart < distanceForCreateTiles)
             {

@@ -24,7 +24,7 @@ public class CheckPoint : MonoBehaviour
     {
         if(checkPointManager != null) 
             checkPointManager.onCheckPointPassed.Invoke(addTime);
-        Debug.Log("On player Enter");
+        Debug.Log("On _player Enter");
     }
 
 

@@ -3,25 +3,19 @@ using UnityEngine;
 
 public class CinemachineInitializer : MonoBehaviour
 {
-    [SerializeField] private GameManager gameManager;
     private CinemachineCamera cam;
 
     private void OnEnable()
     {
         cam = GetComponent<CinemachineCamera>();
-        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
-        if (gameManager.Player != null)
-            cam.Target.TrackingTarget = gameManager.Player.transform;
     }
 
-
-    private void Update()
+    public void Initialize(Player player)
     {
-        if(cam.Target.TrackingTarget == null)
+        if(player != null)
         {
-            var player = gameManager.Player;
-            if (player != null)
-                cam.Target.TrackingTarget = player.transform;
+            cam.Target.TrackingTarget = player.transform;
         }
     }
+
 }

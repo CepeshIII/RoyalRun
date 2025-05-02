@@ -11,6 +11,9 @@ TagManager:
   - GameTimerShower
   - SceneManager
   - GameManager
+  - ThrowableObjectManager
+  - MainCinemachineCamera
+  - Fog
   layers:
   - Default
   - TransparentFX

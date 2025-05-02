@@ -9,7 +9,6 @@ public class PathGenerator: MonoBehaviour
     [SerializeField] private List<GameObject> tilePrefabs;
     [SerializeField] private List<GameObject> collectableItemPrefabs;
     [SerializeField] private GameObject checkPointPrefab;
-    [SerializeField] private GameManager gameManager;
 
     [SerializeField] private float distanceForDeleteTiles = 6f;
     [SerializeField] private float distanceForCreateTiles = 8f;
@@ -17,6 +16,7 @@ public class PathGenerator: MonoBehaviour
 
     [SerializeField] private Vector3Int tileSize = new Vector3Int(2, 0, 2);
     [SerializeField] private ObstacleGenerator obstacleGenerator;
+    [SerializeField] private Player player;
 
     private int numberOfTilesAfterLastCheckPoint = 0;
 
@@ -30,7 +30,11 @@ public class PathGenerator: MonoBehaviour
     public void OnEnable()
     {
         CreateTilesHolder();
-        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+    }
+
+    public void Initialize(Player player)
+    {
+        this.player = player;
     }
 
     public void Start()
@@ -43,7 +47,7 @@ public class PathGenerator: MonoBehaviour
 
     public void Update()
     {
-        if (_tilePoolManager != null)
+        if (_tilePoolManager != null && player != null)
         {
             ClearPathProcess();
             GeneratePathProcess();
@@ -53,10 +57,10 @@ public class PathGenerator: MonoBehaviour
     public void ClearPathProcess()
     {
         if (_tilePoolManager.FirstActivateTile != null && 
-            gameManager != null && gameManager.Player != null)
+            player != null)
         {
             var distantToPathStart = Vector3.Distance(_tilePoolManager.FirstActivateTile.position,
-                                        gameManager.Player.transform.position);
+                                        player.transform.position);
             if (distantToPathStart > distanceForDeleteTiles)
             {
                 _tilePoolManager.HideFirstTile();
@@ -69,7 +73,7 @@ public class PathGenerator: MonoBehaviour
         if (_tilePoolManager.LastActivateTile != null)
         {
             var distantToEndStart = Vector3.Distance(_tilePoolManager.LastActivateTile.position,
-                                        gameManager.Player.transform.position);
+                                        player.transform.position);
 
             if (distantToEndStart < distanceForCreateTiles)
             {

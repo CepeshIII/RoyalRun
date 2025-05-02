@@ -6,13 +6,17 @@ public class ScoreManager : MonoBehaviour
     [SerializeField] private Player _player;
     [SerializeField] private int _score = 0;
     [SerializeField] private TextMeshProUGUI _scoreShower;
+    [SerializeField] private GameManager gameManager;
 
     public int Score {  get { return _score; } }
 
-    private void OnEnable()
+
+    public void Initialize(Player player)
     {
-        _player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-        _player.OnItemCollect += IncreaseScore;
+        _player = player;
+
+        if(_player != null)
+            player.OnItemCollect += IncreaseScore;
         ShowScore();
     }
 
@@ -25,5 +29,13 @@ public class ScoreManager : MonoBehaviour
     private void ShowScore()
     {
         _scoreShower.text = "Score: " + Score.ToString();
+    }
+
+    private void OnDisable()
+    {
+        if (_player) 
+        {
+            _player.OnItemCollect -= IncreaseScore;
+        }
     }
 }

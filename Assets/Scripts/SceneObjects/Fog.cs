@@ -1,21 +1,19 @@
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class Fog : MonoBehaviour
 {
-    [SerializeField] Vector2 position;
-    [SerializeField] float distance = 40f;
-    [SerializeField] GameManager gameManager;
+    [SerializeField] Vector2 _position;
+    [SerializeField] float _distance = 40f;
+    [SerializeField] Player _player;
 
-    private void OnEnable()
+    public void Initialize(Player player)
     {
-        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        _player = player;
     }
 
     private void LateUpdate()
     {
-        var player = gameManager.Player;
-        if (player != null)
-            transform.position = new Vector3(position.x, position.y, player.transform.position.z + distance);
+        if (_player != null)
+            transform.position = new Vector3(_position.x, _position.y, _player.transform.position.z + _distance);
     }
 }

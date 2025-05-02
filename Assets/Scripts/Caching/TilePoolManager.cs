@@ -34,7 +34,7 @@ public class TilePoolManager : MonoBehaviour
 
     public Tile AddTile(Vector3Int position, GameObject prefab)
     {
-        //Check if position is busy
+        //Check if _position is busy
         if (_activeTilesByPosition.ContainsKey(position))
         {
             HideTile(position);

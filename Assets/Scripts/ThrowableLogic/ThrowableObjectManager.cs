@@ -11,16 +11,17 @@ public class ThrowableObjectManager : MonoBehaviour
 
     [SerializeField] private TilePoolManager TilePoolManager;
     [SerializeField] private PathGenerator PathGenerator;
-    [SerializeField] private GameManager gameManager;
     [SerializeField] private float throwForce = 100f;
     [SerializeField] private float distanceForSpawn = 20f;
+    [SerializeField] private Player player;
 
     [SerializeField] float timerToSpawn = 1f;
      float timeDelay = 0f;
 
-    private void OnEnable()
+
+    public void Initialize(Player player)
     {
-        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        this.player = player;
     }
 
     private void Start()
@@ -30,7 +31,8 @@ public class ThrowableObjectManager : MonoBehaviour
 
     private void Update()
     {
-        transform.position = gameManager.Player.transform.position + Vector3.forward * distanceForSpawn;
+        if(player != null) 
+            transform.position = player.transform.position + Vector3.forward * distanceForSpawn;
 
         timeDelay += Time.deltaTime;
         if (timeDelay >= timerToSpawn)
@@ -48,7 +50,7 @@ public class ThrowableObjectManager : MonoBehaviour
         var tile = PathGenerator.GetLastTile();
         var throwableObjectType = throwableObjectTypes[Random.Range(0, throwableObjectTypes.Count)];
 
-        if(tile != null && throwableObjectMainPartPrefab != null)
+        if(tile != null && throwableObjectMainPartPrefab != null && player != null)
         {
             var throwableObjectMainPart = TilePoolManager.AddCachedObject(
                 tile : tile, 
@@ -73,7 +75,7 @@ public class ThrowableObjectManager : MonoBehaviour
             rb.linearVelocity = Vector3.zero;
             rb.rotation = Quaternion.LookRotation(new Vector3(Random.value, Random.value, Random.value));
 
-            var direction = gameManager.Player.transform.position - transform.position;
+            var direction = player.transform.position - transform.position;
             var force = direction.normalized * throwForce;
             rb.AddForce(force, ForceMode.Impulse);
         }

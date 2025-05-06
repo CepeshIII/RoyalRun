@@ -5,12 +5,12 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public delegate void GameEvents();
+[RequireComponent(typeof(GameTimer))]
 public class GameManager: MonoBehaviour
 {
-    public GameEvents OnStartGame;
-    public GameEvents OnGameOver;
-    public GameEvents OnCheckPointPass;
+    public event Action OnStartGame;
+    public event Action OnGameOver;
+    public event Action OnCheckPointPass;
 
     [Header("Core References")]
     [SerializeField, Tooltip("Player controller")] private Player _player;
@@ -31,7 +31,6 @@ public class GameManager: MonoBehaviour
     [SerializeField, ReadOnly] private PlayerInitializer _playerInitializer;
 
     [Header("Settings")]
-    [SerializeField] float _startTime = 14.88f;
     [SerializeField, Range(-100f, 0f)] private float _fallThreshold = -20f;
     [SerializeField, Range(0f, 5f)] private float _postGameDelay = 2f;
 
@@ -49,13 +48,20 @@ public class GameManager: MonoBehaviour
             _player = GameObject.FindGameObjectWithTag("Player")?.GetComponent<Player>();
         }
 
-        CreatePoolManager();
+        _poolManager = (PoolManager)PoolManager.Instance;
+        _gameTimer = (GameTimer)GameTimer.Instance;
+        _gameTimer.OnTimerEnd += HandleGameOver;
 
-        if (GameObject.FindGameObjectWithTag("ObstacleGenerator")
-        .TryGetComponent<ObstacleGenerator>(out _obstacleGenerator))
-        {
-            _obstacleGenerator.Initialize(_poolManager);
-        }
+        _obstacleGenerator = GameObject.FindGameObjectWithTag("ObstacleGenerator")
+            .GetComponent<ObstacleGenerator>();
+        _obstacleGenerator.Initialize(_poolManager);
+
+        _cinemachineInitializer = GameObject.FindGameObjectWithTag("MainCinemachineCamera")
+            .GetComponent<CinemachineInitializer>();
+        _cinemachineInitializer.Initialize(_player);
+
+        _checkPointManager = (CheckPointManager)CheckPointManager.Instance;
+        _checkPointManager.onCheckPointPassed += CheckPointPassed;
 
         if (GameObject.FindGameObjectWithTag("PathGenerator")
                 .TryGetComponent<PathGenerator>(out _pathGenerator))
@@ -69,22 +75,14 @@ public class GameManager: MonoBehaviour
             _scoreManager.Initialize(_player);
         }
 
-        _gameTimer = gameObject.AddComponent<GameTimer>();
-        _gameTimer.OnTimerEnd += HandleGameOver;
-
-        _checkPointManager = (CheckPointManager)CheckPointManager.Instance;
-        _checkPointManager.onCheckPointPassed += CheckPointPassed;
-
         if( GameObject.FindGameObjectWithTag("ThrowableObjectManager")
                 .TryGetComponent<ThrowableObjectManager>(out _throwableManager))
         {
             _throwableManager.Initialize(_player, _pathGenerator, _poolManager);
         }
 
-        Invoke("InitializeCamera", 2f);
-
         if (GameObject.FindGameObjectWithTag("Fog")
-        .TryGetComponent<Fog>(out _fog))
+                .TryGetComponent<Fog>(out _fog))
         {
             _fog.Initialize(_player);
         }
@@ -97,8 +95,6 @@ public class GameManager: MonoBehaviour
 
     private void Start()
     {
-        if(_gameTimer!= null)
-            _gameTimer.SetTimer(_startTime);
         OnStartGame?.Invoke();
     }
 
@@ -109,30 +105,6 @@ public class GameManager: MonoBehaviour
         if (_gameTimer != null)
             _gameTimer.Tick(Time.deltaTime);
         CheckFallOutOfBounds();
-    }
-
-    public void CreatePoolManager()
-    {
-        var tilesHolder = GameObject.FindGameObjectWithTag("PoolManager");
-        if (tilesHolder != null)
-            Destroy(tilesHolder.gameObject);
-
-        tilesHolder = new GameObject("PoolManager")
-        {
-            tag = "PoolManager"
-        };
-
-        _poolManager = tilesHolder.AddComponent<PoolManager>();
-        _poolManager.Innit();
-    }
-
-    public void InitializeCamera()
-    {
-        if (GameObject.FindGameObjectWithTag("MainCinemachineCamera")
-        .TryGetComponent<CinemachineInitializer>(out _cinemachineInitializer))
-        {
-            _cinemachineInitializer.Initialize(_player);
-        }
     }
 
     public void ConnectGameSoundManager()
@@ -212,7 +184,10 @@ public class GameManager: MonoBehaviour
     private void OnDisable()
     {
         if (_gameTimer != null)
+        {
+            _gameTimer.OnTimerEnd -= HandleGameOver;
             Destroy(_gameTimer);
+        }
 
         if(_checkPointManager != null)
             _checkPointManager.onCheckPointPassed -= CheckPointPassed;

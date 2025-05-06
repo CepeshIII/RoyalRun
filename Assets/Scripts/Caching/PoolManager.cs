@@ -19,7 +19,7 @@ public class PoolManager : Singleton<PoolManager>
     public Tile LastActivateTile { get { return lastActivateTile; } }
 
 
-    public void Innit()
+    public void Awake()
     {
         _activeTilesByPosition = new();
         _initializedTilesPools = new();

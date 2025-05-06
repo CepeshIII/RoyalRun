@@ -30,7 +30,7 @@ public class CheckPoint : MonoBehaviour
     {
         if(checkPointManager != null && !wasTrigger)
         {
-            checkPointManager.onCheckPointPassed.Invoke(currentExtraTime);
+            checkPointManager.onCheckPointPassed?.Invoke(currentExtraTime);
             wasTrigger = true;
             ReduceExtraTime();
         }

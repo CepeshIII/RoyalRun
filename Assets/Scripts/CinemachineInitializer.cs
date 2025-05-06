@@ -1,21 +1,32 @@
+using System.Collections;
 using Unity.Cinemachine;
 using UnityEngine;
 
 public class CinemachineInitializer : MonoBehaviour
 {
-    private CinemachineCamera cam;
+    [SerializeField] private float pauseBeforeFollow = 2f;
+
+    private CinemachineCamera _cam;
+    private Player _player;
 
     private void OnEnable()
     {
-        cam = GetComponent<CinemachineCamera>();
+        _cam = GetComponent<CinemachineCamera>();
     }
 
     public void Initialize(Player player)
     {
         if(player != null)
         {
-            cam.Target.TrackingTarget = player.transform;
+            _player = player;
+            StartCoroutine(StartCameraFollow());
         }
     }
 
+    private IEnumerator StartCameraFollow()
+    {
+        yield return new WaitForSeconds(pauseBeforeFollow);
+        _cam.Target.TrackingTarget = _player.transform;
+
+    }
 }

@@ -1,18 +1,25 @@
+using System;
 using TMPro;
 using UnityEngine;
 
-public delegate void  GameTimerEvents();
-
-public class GameTimer : MonoBehaviour
+public class GameTimer : Singleton<GameTimer>
 {
+    public event Action OnTimerEnd;
+
     [SerializeField] private TextMeshProUGUI _shower;
-    public GameTimerEvents OnTimerEnd;
+    [SerializeField] float _initialCountdown = 14.88f;
 
     private float _time = 0f;
 
-    private void OnEnable()
+    private void Awake()
     {
-        _shower = GameObject.FindGameObjectWithTag("GameTimerShower").GetComponent<TextMeshProUGUI>();
+        if(_shower == null)
+            _shower = GameObject.FindGameObjectWithTag("GameTimerShower").GetComponent<TextMeshProUGUI>();
+    }
+
+    public void Start()
+    {
+        _time = _initialCountdown;
     }
 
     public void SetTimer(float startTime)

@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using UnityEditor.EditorTools;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class ObstacleGenerator : MonoBehaviour
 {
@@ -9,19 +7,14 @@ public class ObstacleGenerator : MonoBehaviour
     [SerializeField] private List<GameObject> collectableItemsPrefabs;
     [SerializeField] private Vector3Int gridSize = new (2, 1, 2);
     [SerializeField] private Vector2Int mapCapacity = new (3, 5);
-    [SerializeField] private TilePoolManager _poolManager;
+    [SerializeField] private PoolManager _poolManager;
 
     [SerializeField] private int chanceOfGeneratingCollectableItem = 50;
     [SerializeField] private int chanceOfGeneratingObstacle = 40;
     private int lastTileBlockPosX = 0;
 
-    //private void OnEnable()
-    //{
-    //    _poolManager = GameObject.FindGameObjectWithTag("PoolManager")
-    //        .GetComponent<TilePoolManager>();
-    //}
 
-    public void Initialize(TilePoolManager poolManager)
+    public void Initialize(PoolManager poolManager)
     {
         _poolManager = poolManager;
     }

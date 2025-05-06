@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 
-public class TilePoolManager : MonoBehaviour
+public class PoolManager : MonoBehaviour
 {
     private Dictionary<string, Queue<Tile>> _initializedTilesPools;
     private Dictionary<string, List<CachedObject>> _initializedCachedObjectsLists;

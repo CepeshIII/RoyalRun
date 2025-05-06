@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Chair
   m_EditorClassIdentifier: 
   objectPrefab: {fileID: 7808379655679561757, guid: fb5e4c107a8467043a7603e936d86a47, type: 3}
-  Mass: 50
+  Mass: 100

@@ -21,7 +21,7 @@ public class GameManager: MonoBehaviour
     [SerializeField] ThrowableObjectManager _throwableObjectManager;
     [SerializeField] PlayerInitializer _playerInitializer;
     [SerializeField] CinemachineInitializer _cinemachineInitializer;
-    [SerializeField] TilePoolManager _poolManager;
+    [SerializeField] PoolManager _poolManager;
     [SerializeField] Fog _fog;
     [SerializeField] ObstacleGenerator _obstacleGenerator;
     
@@ -115,7 +115,7 @@ public class GameManager: MonoBehaviour
             tag = "PoolManager"
         };
 
-        _poolManager = tilesHolder.AddComponent<TilePoolManager>();
+        _poolManager = tilesHolder.AddComponent<PoolManager>();
         _poolManager.Innit();
     }
 

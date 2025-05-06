@@ -19,7 +19,7 @@ public class ThrowableObjectManager : MonoBehaviour
     [SerializeField] private GameObject _objectPrefab;
 
     [Header("Managers (Auto-assigned)")]
-    [SerializeField] private TilePoolManager _poolManager;
+    [SerializeField] private PoolManager _poolManager;
     [SerializeField] private PathGenerator _pathGenerator;
 
     [Header("Spawn Settings")]
@@ -45,7 +45,7 @@ public class ThrowableObjectManager : MonoBehaviour
     private int _throwCount;
 
 
-    public void Initialize(Player player, PathGenerator pathGenerator, TilePoolManager poolManager)
+    public void Initialize(Player player, PathGenerator pathGenerator, PoolManager poolManager)
     {
         if (player == null) throw new ArgumentNullException(nameof(player));
          _playerTransform = player.transform;

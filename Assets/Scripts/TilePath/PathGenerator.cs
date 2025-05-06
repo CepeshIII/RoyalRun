@@ -5,7 +5,7 @@ using Random = UnityEngine.Random;
 
 public class PathGenerator: MonoBehaviour
 {
-    private TilePoolManager _poolManager;
+    private PoolManager _poolManager;
 
     [SerializeField] private List<GameObject> _tilePrefabs;
     [SerializeField] private List<GameObject> _collectableItemPrefabs;
@@ -27,7 +27,7 @@ public class PathGenerator: MonoBehaviour
         Vector3Int.forward,
     };
 
-    public void Initialize(Player player, TilePoolManager poolManager, ObstacleGenerator obstacleGenerator)
+    public void Initialize(Player player, PoolManager poolManager, ObstacleGenerator obstacleGenerator)
     {
         if (player == null) throw new ArgumentNullException(nameof(player));
         if (poolManager == null) throw new ArgumentNullException(nameof(poolManager));

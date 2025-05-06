@@ -414,7 +414,8 @@ MonoBehaviour:
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
-  m_fontSharedMaterials: []
+  m_fontSharedMaterials:
+  - {fileID: 2180264, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -651,7 +652,7 @@ MonoBehaviour:
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 1
-  m_Antialiasing: 0
+  m_Antialiasing: 2
   m_AntialiasingQuality: 2
   m_StopNaN: 0
   m_Dithering: 0
@@ -7011,27 +7012,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7359310705967155136, guid: 1a719e27c1e661045b98fa52d52c8f4b, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.25149307
+      value: 0.89239913
       objectReference: {fileID: 0}
     - target: {fileID: 7359310705967155136, guid: 1a719e27c1e661045b98fa52d52c8f4b, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.11727303
+      value: 0.23911765
       objectReference: {fileID: 0}
     - target: {fileID: 7359310705967155136, guid: 1a719e27c1e661045b98fa52d52c8f4b, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.8707154
+      value: -0.3696438
       objectReference: {fileID: 0}
     - target: {fileID: 7359310705967155136, guid: 1a719e27c1e661045b98fa52d52c8f4b, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.4060209
+      value: 0.09904577
       objectReference: {fileID: 0}
     - target: {fileID: 7359310705967155136, guid: 1a719e27c1e661045b98fa52d52c8f4b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 50
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 7359310705967155136, guid: 1a719e27c1e661045b98fa52d52c8f4b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 147.779
+      value: -45
       objectReference: {fileID: 0}
     - target: {fileID: 7359310705967155136, guid: 1a719e27c1e661045b98fa52d52c8f4b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z

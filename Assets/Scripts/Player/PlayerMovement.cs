@@ -61,7 +61,7 @@ public class PlayerMovement : MonoBehaviour, IMovable
     private void FixedUpdate()
     {
         UpdateGroundedStatus();
-        ApplyMovement();
+        ApplyMovementSeparately();
     }
 
     private void LateUpdate()
@@ -141,9 +141,21 @@ public class PlayerMovement : MonoBehaviour, IMovable
 
         // Smooth velocity change
         _currentVelocity = Vector3.Lerp(_currentVelocity, desired, _acceleration * accelerationFactor);
-
         // Move Rigidbody
         _rigidbody.MovePosition(_rigidbody.position + _currentVelocity * Time.fixedDeltaTime);
+    }
+
+    private void ApplyMovementSeparately()
+    {
+        var zDesired = _inputDirection.z * _runSpeed;
+        var xDesired = _inputDirection.x * _strafeSpeed;
+        var accelerationFactor = _accelerationCurve.Evaluate(Mathf.InverseLerp(0f, _runSpeed, _currentVelocity.z));
+
+        _currentVelocity.z = Mathf.Lerp(_currentVelocity.z, zDesired, _acceleration * accelerationFactor);
+        _currentVelocity.x = Mathf.Lerp(_currentVelocity.x, xDesired, accelerationFactor);
+        // Move Rigidbody
+        _rigidbody.MovePosition(_rigidbody.position + _currentVelocity * Time.fixedDeltaTime);
+
     }
 
     private void UpdateAnimatorParameters()

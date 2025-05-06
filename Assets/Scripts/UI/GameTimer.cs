@@ -21,7 +21,7 @@ public class GameTimer : MonoBehaviour
         UpdateShower();
     }
 
-    public void UpdateTime()
+    public void Tick(float deltaTime)
     {
 
         if( _time <= 0f)
@@ -30,14 +30,14 @@ public class GameTimer : MonoBehaviour
         }
         else
         {
-            _time -= Time.deltaTime;
+            _time -= deltaTime;
         }
         UpdateShower();
     }
 
-    public void AddTime(float time)
+    public void AddTime(float extraTime)
     {
-        _time += time;
+        _time += extraTime;
         UpdateShower();
     }
 

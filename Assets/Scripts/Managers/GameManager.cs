@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using Unity.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -11,22 +12,28 @@ public class GameManager: MonoBehaviour
     public GameEvents OnGameOver;
     public GameEvents OnCheckPointPass;
 
-    [SerializeField] Player _player;
-    [SerializeField] PathGenerator _pathGenerator;
-    [SerializeField] SceneLoader _sceneLoader;
-    [SerializeField] ScoreManager _scoreManager;
-    [SerializeField] GameTimer _gameTimer;
-    [SerializeField] CheckPointManager _checkPointManager;
-    [SerializeField] GameSoundManager _gameSoundManager;
-    [SerializeField] ThrowableObjectManager _throwableObjectManager;
-    [SerializeField] PlayerInitializer _playerInitializer;
-    [SerializeField] CinemachineInitializer _cinemachineInitializer;
-    [SerializeField] PoolManager _poolManager;
-    [SerializeField] Fog _fog;
-    [SerializeField] ObstacleGenerator _obstacleGenerator;
-    
+    [Header("Core References")]
+    [SerializeField, Tooltip("Player controller")] private Player _player;
+    [SerializeField, Tooltip("Path tile generator")] private PathGenerator _pathGenerator;
+    [SerializeField, Tooltip("Managed scene transitions")] private SceneLoader _sceneLoader;
+    [SerializeField, Tooltip("Score tracking")] private ScoreManager _scoreManager;
+    [SerializeField, Tooltip("Throwable objects spawner")]
+    private ThrowableObjectManager _throwableManager;
 
+    [Header("Game Systems (Auto-assigned)")]
+    [SerializeField, ReadOnly] private GameTimer _gameTimer;
+    [SerializeField, ReadOnly] private CheckPointManager _checkPointManager;
+    [SerializeField, ReadOnly] private GameSoundManager _soundManager;
+    [SerializeField, ReadOnly] private PoolManager _poolManager;
+    [SerializeField, ReadOnly] private CinemachineInitializer _cinemachineInitializer;
+    [SerializeField, ReadOnly] private Fog _fog;
+    [SerializeField, ReadOnly] private ObstacleGenerator _obstacleGenerator;
+    [SerializeField, ReadOnly] private PlayerInitializer _playerInitializer;
+
+    [Header("Settings")]
     [SerializeField] float _startTime = 14.88f;
+    [SerializeField, Range(-100f, 0f)] private float _fallThreshold = -20f;
+    [SerializeField, Range(0f, 5f)] private float _postGameDelay = 2f;
 
     private bool _isGameOver = false;
 
@@ -63,17 +70,15 @@ public class GameManager: MonoBehaviour
         }
 
         _gameTimer = gameObject.AddComponent<GameTimer>();
-        if (_gameTimer != null)
-            _gameTimer.OnTimerEnd += StartGameOver;
+        _gameTimer.OnTimerEnd += HandleGameOver;
 
         _checkPointManager = (CheckPointManager)CheckPointManager.Instance;
-        if (_checkPointManager != null)
-            _checkPointManager.onCheckPointPassed += CheckPointPassed;
+        _checkPointManager.onCheckPointPassed += CheckPointPassed;
 
         if( GameObject.FindGameObjectWithTag("ThrowableObjectManager")
-                .TryGetComponent<ThrowableObjectManager>(out _throwableObjectManager))
+                .TryGetComponent<ThrowableObjectManager>(out _throwableManager))
         {
-            _throwableObjectManager.Initialize(_player, _pathGenerator, _poolManager);
+            _throwableManager.Initialize(_player, _pathGenerator, _poolManager);
         }
 
         Invoke("InitializeCamera", 2f);
@@ -99,9 +104,11 @@ public class GameManager: MonoBehaviour
 
     private void Update()
     {
-        CheckIfGameOver();
+        if (_isGameOver) return;
+
         if (_gameTimer != null)
-            _gameTimer.UpdateTime();
+            _gameTimer.Tick(Time.deltaTime);
+        CheckFallOutOfBounds();
     }
 
     public void CreatePoolManager()
@@ -130,23 +137,41 @@ public class GameManager: MonoBehaviour
 
     public void ConnectGameSoundManager()
     {
-        _gameSoundManager = (GameSoundManager)GameSoundManager.Instance;
-        if (_gameSoundManager == null)
+        _soundManager = (GameSoundManager)GameSoundManager.Instance;
+        if (_soundManager == null)
         {
-            Debug.LogError("_gameSoundManager is null");
+            Debug.LogError("_soundManager is null");
         }
 
-        OnStartGame += _gameSoundManager.PlayStartGameSound;
-        OnCheckPointPass += _gameSoundManager.PlayCheckPointPassSound;
-        OnGameOver += _gameSoundManager.PlayGameOverSound;
+        OnStartGame += _soundManager.PlayStartGameSound;
+        OnCheckPointPass += _soundManager.PlayCheckPointPassSound;
+        OnGameOver += _soundManager.PlayGameOverSound;
     }
 
-    private void CheckIfGameOver()
+    private void CheckPointPassed(float extraTime)
     {
-        if(_player.transform.position.y < -20 && !_isGameOver)
+        _gameTimer.AddTime(extraTime);
+        OnCheckPointPass?.Invoke();
+    }
+
+    private void CheckFallOutOfBounds()
+    {
+        if(_player.transform.position.y < _fallThreshold)
         {
-            StartGameOver();
+            HandleGameOver();
         }
+    }
+
+    private void HandleGameOver()
+    {
+        if (_isGameOver) return;
+        _isGameOver = true;
+
+        OnGameOver?.Invoke();
+
+        SavePlayerStats();
+        _player.gameObject.SetActive(false);
+        StartCoroutine(TransitionToMenu());
     }
 
     private void SavePlayerStats()
@@ -154,7 +179,7 @@ public class GameManager: MonoBehaviour
         var bestResult = PlayerPrefs.GetInt("BestScore");
         var currentResult = _scoreManager.Score;
 
-        if(bestResult < currentResult)
+        if (bestResult < currentResult)
         {
             PlayerPrefs.SetInt("BestScore", currentResult);
         }
@@ -162,38 +187,26 @@ public class GameManager: MonoBehaviour
         PlayerPrefs.SetInt("LastScore", currentResult);
     }
 
-    private void CheckPointPassed(float addTime)
+    private IEnumerator TransitionToMenu()
     {
-        _gameTimer.AddTime(addTime);
-        OnCheckPointPass?.Invoke(); 
-    }
-
-    private void StartGameOver()
-    {
-        if(!_isGameOver)
-            StartCoroutine(GameOver());
-    }
-
-    private IEnumerator GameOver()
-    {
-        _isGameOver = true;
-        OnGameOver?.Invoke();
-        SavePlayerStats();
-        _player.gameObject.SetActive(false);
-
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(_postGameDelay);
         _sceneLoader.LoadMenuScene();
-        _pathGenerator.Destroy();
+        Cleanup();
     }
 
+    private void Cleanup()
+    {
+        _pathGenerator.Destroy();
+        _poolManager.Clear();
+    }
 
     public void DisconnectGameSoundManager()
     {
-        if (_gameSoundManager == null) return;
+        if (_soundManager == null) return;
 
-        OnStartGame -= _gameSoundManager.PlayStartGameSound;
-        OnCheckPointPass -= _gameSoundManager.PlayCheckPointPassSound;
-        OnGameOver -= _gameSoundManager.PlayGameOverSound;
+        OnStartGame -= _soundManager.PlayStartGameSound;
+        OnCheckPointPass -= _soundManager.PlayCheckPointPassSound;
+        OnGameOver -= _soundManager.PlayGameOverSound;
     }
 
     private void OnDisable()

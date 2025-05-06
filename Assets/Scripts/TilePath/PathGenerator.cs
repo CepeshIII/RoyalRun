@@ -127,13 +127,7 @@ public class PathGenerator: MonoBehaviour
 
     public void Destroy()
     {
-        _poolManager.Clear();
 
-        if( _poolManager != null)
-        {
-            _poolManager.gameObject.SetActive(false);
-            Destroy(_poolManager.gameObject);
-        }
 
         this.gameObject.SetActive(false);
         Destroy(gameObject);

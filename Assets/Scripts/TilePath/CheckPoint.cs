@@ -6,12 +6,12 @@ public class CheckPoint : MonoBehaviour
     [SerializeField] CheckPointManager checkPointManager;
     [SerializeField] TextMeshPro textMeshPro;
 
-    [SerializeField] float startAddTime = 12f;
-    [SerializeField] float minAddTime = 4f;
+    [SerializeField] float startExtraTime = 12f;
+    [SerializeField] float minExtraTime = 4f;
     [SerializeField] float reduceTimeStep = 1f;
     [SerializeField] bool wasTrigger = false;
 
-    private float currentAddtime;
+    private float currentExtraTime;
 
     private void OnEnable()
     {
@@ -22,7 +22,7 @@ public class CheckPoint : MonoBehaviour
 
     private void Start()
     {
-        currentAddtime = startAddTime;
+        currentExtraTime = startExtraTime;
         UpdateTimeDisplayer();
     }
 
@@ -30,24 +30,24 @@ public class CheckPoint : MonoBehaviour
     {
         if(checkPointManager != null && !wasTrigger)
         {
-            checkPointManager.onCheckPointPassed.Invoke(currentAddtime);
+            checkPointManager.onCheckPointPassed.Invoke(currentExtraTime);
             wasTrigger = true;
-            ReduceTime();
+            ReduceExtraTime();
         }
         Debug.Log("On _player Enter");
     }
 
-    private void ReduceTime()
+    private void ReduceExtraTime()
     {
-        currentAddtime -= reduceTimeStep;
-        currentAddtime = Mathf.Max(currentAddtime, minAddTime);
+        currentExtraTime -= reduceTimeStep;
+        currentExtraTime = Mathf.Max(currentExtraTime, minExtraTime);
     }
 
     private void UpdateTimeDisplayer()
     {
         if (textMeshPro != null)
         {
-            textMeshPro.text = string.Format("+{0:F3}", currentAddtime.ToString());
+            textMeshPro.text = string.Format("+{0:F3}", currentExtraTime.ToString());
         }
     }
 }

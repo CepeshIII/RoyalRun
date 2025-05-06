@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 
-public class PoolManager : MonoBehaviour
+public class PoolManager : Singleton<PoolManager>
 {
     private Dictionary<string, Queue<Tile>> _initializedTilesPools;
     private Dictionary<string, List<CachedObject>> _initializedCachedObjectsLists;

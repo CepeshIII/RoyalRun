@@ -211,7 +211,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3395497325307666707, guid: 753914afd2eb55e4ea3e02c85d43f460, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0.9231376
+      value: 0.95
       objectReference: {fileID: 0}
     - target: {fileID: 3395497325307666707, guid: 753914afd2eb55e4ea3e02c85d43f460, type: 3}
       propertyPath: m_SizeDelta.x
@@ -5885,7 +5885,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AspectMode: 2
-  m_AspectRatio: 3
+  m_AspectRatio: 2.5
 --- !u!1 &942200498
 GameObject:
   m_ObjectHideFlags: 0
@@ -6498,7 +6498,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2344049651893903042, guid: a2a73ae2ac55cd6479ae450082314eff, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0.9231376
+      value: 0.95
       objectReference: {fileID: 0}
     - target: {fileID: 2344049651893903042, guid: a2a73ae2ac55cd6479ae450082314eff, type: 3}
       propertyPath: m_SizeDelta.x
@@ -6660,7 +6660,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AspectMode: 2
-  m_AspectRatio: 3
+  m_AspectRatio: 2.5
 --- !u!1 &1870141397
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,7 +2,7 @@ using System;
 using TMPro;
 using UnityEngine;
 
-public class GameTimer : Singleton<GameTimer>
+public class GameTimer : MonoBehaviour
 {
     public event Action OnTimerEnd;
 
@@ -11,7 +11,7 @@ public class GameTimer : Singleton<GameTimer>
 
     private float _time = 0f;
 
-    private void Awake()
+    private void OnEnable()
     {
         if(_shower == null)
             _shower = GameObject.FindGameObjectWithTag("GameTimerShower").GetComponent<TextMeshProUGUI>();

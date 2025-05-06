@@ -137,8 +137,10 @@ public class PlayerMovement : MonoBehaviour, IMovable
                         _inputDirection.z * _runSpeed)
         );
 
+        var accelerationFactor = _accelerationCurve.Evaluate(Mathf.InverseLerp(0f, _runSpeed, _currentVelocity.z));
+
         // Smooth velocity change
-        _currentVelocity = Vector3.Lerp(_currentVelocity, desired, _acceleration * _accelerationCurve.Evaluate(Mathf.InverseLerp(0f, _runSpeed, _currentVelocity.z)));
+        _currentVelocity = Vector3.Lerp(_currentVelocity, desired, _acceleration * accelerationFactor);
 
         // Move Rigidbody
         _rigidbody.MovePosition(_rigidbody.position + _currentVelocity * Time.fixedDeltaTime);

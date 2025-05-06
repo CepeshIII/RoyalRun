@@ -48,8 +48,8 @@ public class GameManager: MonoBehaviour
             _player = GameObject.FindGameObjectWithTag("Player")?.GetComponent<Player>();
         }
 
+        _gameTimer = GetComponent<GameTimer>();
         _poolManager = (PoolManager)PoolManager.Instance;
-        _gameTimer = (GameTimer)GameTimer.Instance;
         _gameTimer.OnTimerEnd += HandleGameOver;
 
         _obstacleGenerator = GameObject.FindGameObjectWithTag("ObstacleGenerator")

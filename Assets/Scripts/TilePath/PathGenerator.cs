@@ -1,22 +1,23 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class PathGenerator: MonoBehaviour
 {
-    private TilePoolManager _tilePoolManager;
+    private TilePoolManager _poolManager;
 
-    [SerializeField] private List<GameObject> tilePrefabs;
-    [SerializeField] private List<GameObject> collectableItemPrefabs;
-    [SerializeField] private GameObject checkPointPrefab;
+    [SerializeField] private List<GameObject> _tilePrefabs;
+    [SerializeField] private List<GameObject> _collectableItemPrefabs;
+    [SerializeField] private GameObject _checkPointPrefab;
 
-    [SerializeField] private float distanceForDeleteTiles = 6f;
-    [SerializeField] private float distanceForCreateTiles = 8f;
-    [SerializeField] private float countOfTileBetweenCheckPoint = 5;
+    [SerializeField] private float _distanceForDeleteTiles = 6f;
+    [SerializeField] private float _distanceForCreateTiles = 8f;
+    [SerializeField] private float _countOfTileBetweenCheckPoint = 5;
 
-    [SerializeField] private Vector3Int tileSize = new Vector3Int(2, 0, 2);
-    [SerializeField] private ObstacleGenerator obstacleGenerator;
-    [SerializeField] private Player player;
+    [SerializeField] private Vector3Int _tileSize = new Vector3Int(2, 0, 2);
+    [SerializeField] private ObstacleGenerator _obstacleGenerator;
+    [SerializeField] private Player _player;
 
     private int numberOfTilesAfterLastCheckPoint = 0;
 
@@ -26,28 +27,25 @@ public class PathGenerator: MonoBehaviour
         Vector3Int.forward,
     };
 
-
-    public void OnEnable()
+    public void Initialize(Player player, TilePoolManager poolManager, ObstacleGenerator obstacleGenerator)
     {
-        CreateTilesHolder();
-    }
+        if (player == null) throw new ArgumentNullException(nameof(player));
+        if (poolManager == null) throw new ArgumentNullException(nameof(poolManager));
+        if (obstacleGenerator == null) throw new ArgumentNullException(nameof(obstacleGenerator));
 
-    public void Initialize(Player player)
-    {
-        this.player = player;
-    }
+        _player = player;
+        _poolManager = poolManager;
+        _obstacleGenerator = obstacleGenerator;
 
-    public void Start()
-    {
         var startPos = Vector3Int.zero;
         startPos.y = 0;
 
-        GenerateLine(startPos, _moveDirections[1], 10, GetRandomInList(tilePrefabs));
+        GenerateLine(startPos, _moveDirections[1], 10, GetRandomInList(_tilePrefabs));
     }
 
     public void Update()
     {
-        if (_tilePoolManager != null && player != null)
+        if (_poolManager != null && _player != null)
         {
             ClearPathProcess();
             GeneratePathProcess();
@@ -56,26 +54,26 @@ public class PathGenerator: MonoBehaviour
 
     public void ClearPathProcess()
     {
-        if (_tilePoolManager.FirstActivateTile != null && 
-            player != null)
+        if (_poolManager.FirstActivateTile != null && 
+            _player != null)
         {
-            var distantToPathStart = Vector3.Distance(_tilePoolManager.FirstActivateTile.position,
-                                        player.transform.position);
-            if (distantToPathStart > distanceForDeleteTiles)
+            var distantToPathStart = Vector3.Distance(_poolManager.FirstActivateTile.position,
+                                        _player.transform.position);
+            if (distantToPathStart > _distanceForDeleteTiles)
             {
-                _tilePoolManager.HideFirstTile();
+                _poolManager.HideFirstTile();
             }
         }
     }
 
     public void GeneratePathProcess()
     {
-        if (_tilePoolManager.LastActivateTile != null)
+        if (_poolManager.LastActivateTile != null)
         {
-            var distantToEndStart = Vector3.Distance(_tilePoolManager.LastActivateTile.position,
-                                        player.transform.position);
+            var distantToEndStart = Vector3.Distance(_poolManager.LastActivateTile.position,
+                                        _player.transform.position);
 
-            if (distantToEndStart < distanceForCreateTiles)
+            if (distantToEndStart < _distanceForCreateTiles)
             {
                 GenerateTilesRandom(1);
             }
@@ -86,36 +84,21 @@ public class PathGenerator: MonoBehaviour
     {
         for(int i = 0; i < length; i++)
         {
-            var position = startPos + tileSize * (i * direction);
+            var position = startPos + _tileSize * (i * direction);
 
             AddTile(position, prefab);
         }
     }
 
-    public void CreateTilesHolder()
-    {
-        var tilesHolder = GameObject.FindGameObjectWithTag("TilePoolManager");
-        if(tilesHolder != null)
-            Destroy(tilesHolder.gameObject);
-
-        tilesHolder = new GameObject("TilePoolManager")
-        {
-            tag = "TilePoolManager"
-        };
-
-        _tilePoolManager = tilesHolder.AddComponent<TilePoolManager>();
-        _tilePoolManager.Innit();
-    }
-
     public void AddTile(Vector3Int pos, GameObject prefab)
     {
-        var lastTile = _tilePoolManager.AddTile(pos, prefab);
-        obstacleGenerator.GenerateObstacles(lastTile);
+        var lastTile = _poolManager.AddTile(pos, prefab);
+        _obstacleGenerator.GenerateObstacles(lastTile);
 
-        if(numberOfTilesAfterLastCheckPoint >= countOfTileBetweenCheckPoint)
+        if(numberOfTilesAfterLastCheckPoint >= _countOfTileBetweenCheckPoint)
         {
             numberOfTilesAfterLastCheckPoint = 0;
-            _tilePoolManager.AddCachedObject(lastTile, checkPointPrefab, checkPointPrefab.name);
+            _poolManager.AddCachedObject(lastTile, _checkPointPrefab, _checkPointPrefab.name);
         }
         else
         {
@@ -127,26 +110,29 @@ public class PathGenerator: MonoBehaviour
     {
         for (int i = 0; i < count; i++)
         {
-            var lastPos = _tilePoolManager.LastActivateTile.position;
-            var newPos = lastPos + _moveDirections[Random.Range(0, 2)] * tileSize;
+            var lastPos = _poolManager.LastActivateTile.position;
+            var newPos = lastPos + _moveDirections[Random.Range(0, 2)] * _tileSize;
 
-            AddTile(newPos, GetRandomInList(tilePrefabs));
+            AddTile(newPos, GetRandomInList(_tilePrefabs));
         }
     }
 
     public T GetRandomInList<T>(List<T> list)
     {
-        return list[Random.Range(0, list.Count)];
+        if(list.Count > 0)
+            return list[Random.Range(0, list.Count)];
+        else
+            return default(T);
     }
 
     public void Destroy()
     {
-        _tilePoolManager.Clear();
+        _poolManager.Clear();
 
-        if( _tilePoolManager != null)
+        if( _poolManager != null)
         {
-            _tilePoolManager.gameObject.SetActive(false);
-            Destroy(_tilePoolManager.gameObject);
+            _poolManager.gameObject.SetActive(false);
+            Destroy(_poolManager.gameObject);
         }
 
         this.gameObject.SetActive(false);
@@ -155,23 +141,23 @@ public class PathGenerator: MonoBehaviour
 
     public Tile GetLastTile()
     {
-        return _tilePoolManager.LastActivateTile;
+        return _poolManager.LastActivateTile;
     }
 
     public Tile GetTileInPosition(Vector3 position)
     {
-        var tileX = Mathf.CeilToInt(position.x / (float)tileSize.x) * tileSize.x;
-        var tileY = Mathf.CeilToInt(position.y / (float)tileSize.y) * tileSize.y;
-        var tileZ = Mathf.CeilToInt(position.z / (float)tileSize.z) * tileSize.z;
+        var tileX = Mathf.CeilToInt(position.x / (float)_tileSize.x) * _tileSize.x;
+        var tileY = Mathf.CeilToInt(position.y / (float)_tileSize.y) * _tileSize.y;
+        var tileZ = Mathf.CeilToInt(position.z / (float)_tileSize.z) * _tileSize.z;
 
-        var tile = _tilePoolManager.GetTileByPosition(new Vector3Int(tileX, tileY, tileZ));
+        var tile = _poolManager.GetTileByPosition(new Vector3Int(tileX, tileY, tileZ));
         return tile;
     }
 
     private void OnDestroy()
     {
-        if(_tilePoolManager!= null)
-            Destroy(_tilePoolManager.gameObject);
+        if(_poolManager!= null)
+            Destroy(_poolManager.gameObject);
 
     }
 }

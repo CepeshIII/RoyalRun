@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor.EditorTools;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -8,13 +9,21 @@ public class ObstacleGenerator : MonoBehaviour
     [SerializeField] private List<GameObject> collectableItemsPrefabs;
     [SerializeField] private Vector3Int gridSize = new (2, 1, 2);
     [SerializeField] private Vector2Int mapCapacity = new (3, 5);
-    [SerializeField] private TilePoolManager tilePoolManager;
+    [SerializeField] private TilePoolManager _poolManager;
 
+    [SerializeField] private int chanceOfGeneratingCollectableItem = 50;
+    [SerializeField] private int chanceOfGeneratingObstacle = 40;
+    private int lastTileBlockPosX = 0;
 
-    private void OnEnable()
+    //private void OnEnable()
+    //{
+    //    _poolManager = GameObject.FindGameObjectWithTag("PoolManager")
+    //        .GetComponent<TilePoolManager>();
+    //}
+
+    public void Initialize(TilePoolManager poolManager)
     {
-        tilePoolManager = GameObject.FindGameObjectWithTag("TilePoolManager")
-            .GetComponent<TilePoolManager>();
+        _poolManager = poolManager;
     }
 
     public void GenerateObstacles(Tile tile)
@@ -23,19 +32,36 @@ public class ObstacleGenerator : MonoBehaviour
 
         for (int z = -mapCapacity.y; z < mapCapacity.y; z += gridSize.z)
         {
-            int positionZ= position.z + z;
+            var randomX = Random.Range(-1, 2) * gridSize.x;
+            var nextTileBlockPosX = Mathf.Clamp(lastTileBlockPosX + randomX,
+                                        -mapCapacity.x, mapCapacity.x);
+
+            int positionZ = position.z + z;
             for (int x = -mapCapacity.x; x <= mapCapacity.x; x += gridSize.x)
             {
                 int positionX = position.x + x;
-                if (Random.Range(0, 6) == 1) 
+
+                if(nextTileBlockPosX == x)
                 {
-                    CreateObstacle(tile, new Vector3Int(positionX, 0, positionZ));
+                    if (Random.value <= chanceOfGeneratingCollectableItem / 100f)
+                    {
+                        CreateCollectableItem(tile, new Vector3Int(positionX, 1, positionZ));
+                    }
                 }
-                else if(Random.Range(0, 7) == 1)
+                else if (lastTileBlockPosX == x)
                 {
-                    CreateCollectableItem(tile, new Vector3Int(positionX, 1, positionZ));
+
+                }
+                else
+                {
+                    if (Random.value <= chanceOfGeneratingObstacle / 100f) 
+                    {
+                        CreateObstacle(tile, new Vector3Int(positionX, 0, positionZ));
+                    }
                 }
             }
+
+            lastTileBlockPosX = nextTileBlockPosX;
         }
     }
 
@@ -44,7 +70,7 @@ public class ObstacleGenerator : MonoBehaviour
         var item = tilePrefabs[Random.Range(0, tilePrefabs.Count - 1)];
 
         if(tile != null && item != null)
-            tilePoolManager.AddCachedObject(tile, item, position, item.name);
+            _poolManager.AddCachedObject(tile, item, position, item.name);
     }
 
     private void CreateCollectableItem(Tile tile, Vector3Int position)
@@ -52,7 +78,7 @@ public class ObstacleGenerator : MonoBehaviour
         var item = collectableItemsPrefabs[Random.Range(0, tilePrefabs.Count - 1)];
 
         if (tile != null && item != null)
-            tilePoolManager.AddCachedObject(tile, item, position, item.name);
+            _poolManager.AddCachedObject(tile, item, position, item.name);
     }
 
 }

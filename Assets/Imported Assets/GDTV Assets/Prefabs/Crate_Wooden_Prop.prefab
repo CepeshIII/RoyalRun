@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5018402818531871284}
   - component: {fileID: 8217707382003090833}
   - component: {fileID: 6192412220043211099}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Crate_Wooden_Prop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,7 +97,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7435111241073597136}
   - component: {fileID: 8887778651575379488}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}

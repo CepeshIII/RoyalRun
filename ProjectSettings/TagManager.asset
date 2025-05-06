@@ -7,13 +7,14 @@ TagManager:
   - PathGenerator
   - ScoreManager
   - CollectableItem
-  - TilePoolManager
   - GameTimerShower
   - SceneManager
   - GameManager
   - ThrowableObjectManager
   - MainCinemachineCamera
   - Fog
+  - PoolManager
+  - ObstacleGenerator
   layers:
   - Default
   - TransparentFX
@@ -25,8 +26,8 @@ TagManager:
   - ThrowableObject
   - CheckZone
   - CollectableItem
-  - 
-  - 
+  - Wall
+  - Ground
   - 
   - 
   - 

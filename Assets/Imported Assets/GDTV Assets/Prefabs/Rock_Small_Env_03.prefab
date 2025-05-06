@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3216903176521384355}
   - component: {fileID: 1948765546127101446}
   - component: {fileID: 4390887288192498380}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Rock_Small_Env_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,7 +97,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9075864482056086103}
   - component: {fileID: 6431400706323214280}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}

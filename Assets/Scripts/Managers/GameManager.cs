@@ -21,7 +21,10 @@ public class GameManager: MonoBehaviour
     [SerializeField] ThrowableObjectManager _throwableObjectManager;
     [SerializeField] PlayerInitializer _playerInitializer;
     [SerializeField] CinemachineInitializer _cinemachineInitializer;
+    [SerializeField] TilePoolManager _poolManager;
     [SerializeField] Fog _fog;
+    [SerializeField] ObstacleGenerator _obstacleGenerator;
+    
 
     [SerializeField] float _startTime = 14.88f;
 
@@ -39,13 +42,19 @@ public class GameManager: MonoBehaviour
             _player = GameObject.FindGameObjectWithTag("Player")?.GetComponent<Player>();
         }
 
+        CreatePoolManager();
+
+        if (GameObject.FindGameObjectWithTag("ObstacleGenerator")
+        .TryGetComponent<ObstacleGenerator>(out _obstacleGenerator))
+        {
+            _obstacleGenerator.Initialize(_poolManager);
+        }
 
         if (GameObject.FindGameObjectWithTag("PathGenerator")
                 .TryGetComponent<PathGenerator>(out _pathGenerator))
         {
-            _pathGenerator.Initialize(_player);
+            _pathGenerator.Initialize(_player, _poolManager, _obstacleGenerator);
         }
-
 
         if (GameObject.FindGameObjectWithTag("ScoreManager")
                 .TryGetComponent<ScoreManager>(out _scoreManager))
@@ -64,14 +73,10 @@ public class GameManager: MonoBehaviour
         if( GameObject.FindGameObjectWithTag("ThrowableObjectManager")
                 .TryGetComponent<ThrowableObjectManager>(out _throwableObjectManager))
         {
-            _throwableObjectManager.Initialize(_player);
+            _throwableObjectManager.Initialize(_player, _pathGenerator, _poolManager);
         }
 
-        if(GameObject.FindGameObjectWithTag("MainCinemachineCamera")
-                .TryGetComponent<CinemachineInitializer>(out _cinemachineInitializer))
-        {
-            _cinemachineInitializer.Initialize(_player);
-        }
+        Invoke("InitializeCamera", 2f);
 
         if (GameObject.FindGameObjectWithTag("Fog")
         .TryGetComponent<Fog>(out _fog))
@@ -99,6 +104,29 @@ public class GameManager: MonoBehaviour
             _gameTimer.UpdateTime();
     }
 
+    public void CreatePoolManager()
+    {
+        var tilesHolder = GameObject.FindGameObjectWithTag("PoolManager");
+        if (tilesHolder != null)
+            Destroy(tilesHolder.gameObject);
+
+        tilesHolder = new GameObject("PoolManager")
+        {
+            tag = "PoolManager"
+        };
+
+        _poolManager = tilesHolder.AddComponent<TilePoolManager>();
+        _poolManager.Innit();
+    }
+
+    public void InitializeCamera()
+    {
+        if (GameObject.FindGameObjectWithTag("MainCinemachineCamera")
+        .TryGetComponent<CinemachineInitializer>(out _cinemachineInitializer))
+        {
+            _cinemachineInitializer.Initialize(_player);
+        }
+    }
 
     public void ConnectGameSoundManager()
     {

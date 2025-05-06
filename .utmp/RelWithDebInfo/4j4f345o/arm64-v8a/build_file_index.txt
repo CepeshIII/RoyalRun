@@ -1,0 +1,2 @@
+D:\Users\CepeshIII\Documents\Unity projects\3D Game Developer 3D Course\RoyalRun\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\CMakeLists.txt
+D:\Users\CepeshIII\Documents\Unity projects\3D Game Developer 3D Course\RoyalRun\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\GameActivity\CMakeLists.txt

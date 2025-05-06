@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5410887985186526424}
   - component: {fileID: 1467537849881514080}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -64,7 +64,7 @@ GameObject:
   - component: {fileID: 7428475661907036839}
   - component: {fileID: 5816650522170852610}
   - component: {fileID: 8600770953779442120}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Chair_Wooden_Furn_04
   m_TagString: Untagged
   m_Icon: {fileID: 0}

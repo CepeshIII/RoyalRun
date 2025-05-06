@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5021706731103580675}
   - component: {fileID: 7642434105589031554}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -64,7 +64,7 @@ GameObject:
   - component: {fileID: 3101679061728951246}
   - component: {fileID: 2063980383259718763}
   - component: {fileID: 4269496494786150561}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Barrel_Wooden_Prop
   m_TagString: Untagged
   m_Icon: {fileID: 0}

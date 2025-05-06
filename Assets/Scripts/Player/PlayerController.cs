@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
         _movement = GetComponent<IMovable>();
         _playerInput = GetComponent<PlayerInput>();
 
-        _playerInput.OnClick = () => { _movement.Jump(); };
+        //_playerInput.OnClick = () => { _movement.Jump(); };
     }
 
     public void Update()
@@ -24,6 +24,6 @@ public class PlayerController : MonoBehaviour
 
     private void OnDestroy()
     {
-        _playerInput.OnClick = null;
+        //_playerInput.OnClick = null;
     }
 }

@@ -15,10 +15,8 @@ public interface IMovable
     public void ChangeDirection(Vector3 direction);
     public void Jump();
 
-
+    //  Events
     public void ConnectToMoveEvent(IMovableEvent moveEvent);
-
     public void DisconnectFromMoveEvent(IMovableEvent moveEvent);
-
     public MovementEventsContainer GetEventsContainer();
 }

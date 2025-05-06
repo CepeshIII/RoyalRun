@@ -894,6 +894,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pedestalPrefab: {fileID: 222921868}
   cinemachineCamera: {fileID: 819498673}
+  animatorController: {fileID: 9100000, guid: efdf566a075231a4880b5f044d4e639c, type: 2}
 --- !u!1001 &1928289356
 PrefabInstance:
   m_ObjectHideFlags: 0

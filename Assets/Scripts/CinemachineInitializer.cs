@@ -4,29 +4,43 @@ using UnityEngine;
 
 public class CinemachineInitializer : MonoBehaviour
 {
-    [SerializeField] private float pauseBeforeFollow = 2f;
+    [SerializeField] private CinemachineCamera _vcam;
+    [SerializeField] private float _delayBeforeFollow = 2f;
+    [SerializeField, Range(40f, 120f)] private float _minFov = 60f;
+    [SerializeField, Range(40f, 120f)] private float _maxFov = 90f;
 
-    private CinemachineCamera _cam;
-    private Player _player;
+    private PlayerMovement _playerMove;
 
     private void OnEnable()
     {
-        _cam = GetComponent<CinemachineCamera>();
+        _vcam = GetComponent<CinemachineCamera>();
     }
 
     public void Initialize(Player player)
     {
-        if(player != null)
+        _playerMove = player.GetComponent<PlayerMovement>();
+        if (_playerMove != null && _vcam != null) 
         {
-            _player = player;
-            StartCoroutine(StartCameraFollow());
+            _playerMove.OnAccelerationLevelUpdated += HandleAcceleration;
+            StartCoroutine(DelayedFollow(player.transform));
         }
     }
 
-    private IEnumerator StartCameraFollow()
+    private IEnumerator DelayedFollow(Transform target)
     {
-        yield return new WaitForSeconds(pauseBeforeFollow);
-        _cam.Target.TrackingTarget = _player.transform;
+        yield return new WaitForSeconds(_delayBeforeFollow);
+        _vcam.Follow = target;
+        _vcam.LookAt = target;
+    }
 
+    private void HandleAcceleration(float accel)
+    {
+       _vcam.Lens.FieldOfView = Mathf.Lerp(_minFov, _maxFov, accel);
+    }
+
+    private void OnDisable()
+    {
+        if (_playerMove != null)
+            _playerMove.OnAccelerationLevelUpdated -= HandleAcceleration;
     }
 }

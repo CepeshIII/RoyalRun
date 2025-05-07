@@ -84,7 +84,7 @@ MonoBehaviour:
   _animator: {fileID: 0}
   _runSpeed: 20
   _strafeSpeed: 10
-  _acceleration: 0.05
+  _accelerationSmoothing: 0.02
   _accelerationCurve:
     serializedVersion: 2
     m_Curve:

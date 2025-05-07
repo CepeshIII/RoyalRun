@@ -340,7 +340,7 @@ MonoBehaviour:
   checkPointManager: {fileID: 0}
   textMeshPro: {fileID: 4438662760549234118}
   startExtraTime: 12
-  minExtraTime: 4
+  minExtraTime: 8
   reduceTimeStep: 1
   wasTrigger: 0
 --- !u!1001 &1143677067470921792

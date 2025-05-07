@@ -24,7 +24,7 @@ public class PlayerMovement : MonoBehaviour, IMovable
     [Tooltip("Maximum lateral speed")]
     [SerializeField] private float _strafeSpeed = 5f;
     [Tooltip("Acceleration smoothing factor")]
-    [SerializeField][Range(0f, 1f)] private float _acceleration = 0.1f;
+    [SerializeField][Range(0f, 1f)] private float _accelerationSmoothing = 0.02f;
     [SerializeField] private AnimationCurve _accelerationCurve;
 
     [Header("Jump & Ground")]
@@ -43,9 +43,11 @@ public class PlayerMovement : MonoBehaviour, IMovable
     private bool _isFalling;
 
     // Events
-    private MovementEventsContainer _events;
-    public MovementEventsContainer Events => _events ??= new MovementEventsContainer();
     public event Action OnStumbled;
+    public event Action OnMove;
+    public event Action<float> OnAccelerationLevelUpdated;
+
+    public float ForwardRunSpeedRatio => Mathf.InverseLerp(0f, _runSpeed, _currentVelocity.z);
 
     private void OnEnable()
     {
@@ -78,8 +80,8 @@ public class PlayerMovement : MonoBehaviour, IMovable
         if (!_isGrounded) return;
 
         // Store raw input for FixedUpdate
-        _inputDirection = direction.normalized;
-        Events.OnMove?.Invoke();
+        _inputDirection = direction;
+        OnMove?.Invoke();
 
         // Set swimming/air control? Could be extended
     }
@@ -137,25 +139,26 @@ public class PlayerMovement : MonoBehaviour, IMovable
                         _inputDirection.z * _runSpeed)
         );
 
-        var accelerationFactor = _accelerationCurve.Evaluate(Mathf.InverseLerp(0f, _runSpeed, _currentVelocity.z));
+        var accelerationFactor = _accelerationCurve.Evaluate(ForwardRunSpeedRatio);
 
         // Smooth velocity change
-        _currentVelocity = Vector3.Lerp(_currentVelocity, desired, _acceleration * accelerationFactor);
+        _currentVelocity = Vector3.Lerp(_currentVelocity, desired, _accelerationSmoothing * accelerationFactor);
         // Move Rigidbody
         _rigidbody.MovePosition(_rigidbody.position + _currentVelocity * Time.fixedDeltaTime);
+        OnAccelerationLevelUpdated?.Invoke(ForwardRunSpeedRatio);
     }
 
     private void ApplyMovementSeparately()
     {
         var zDesired = _inputDirection.z * _runSpeed;
         var xDesired = _inputDirection.x * _strafeSpeed;
-        var accelerationFactor = _accelerationCurve.Evaluate(Mathf.InverseLerp(0f, _runSpeed, _currentVelocity.z));
+        var accelerationFactor = _accelerationCurve.Evaluate(ForwardRunSpeedRatio);
 
-        _currentVelocity.z = Mathf.Lerp(_currentVelocity.z, zDesired, _acceleration * accelerationFactor);
+        _currentVelocity.z = Mathf.Lerp(_currentVelocity.z, zDesired, _accelerationSmoothing * accelerationFactor);
         _currentVelocity.x = Mathf.Lerp(_currentVelocity.x, xDesired, accelerationFactor);
         // Move Rigidbody
         _rigidbody.MovePosition(_rigidbody.position + _currentVelocity * Time.fixedDeltaTime);
-
+        OnAccelerationLevelUpdated?.Invoke(ForwardRunSpeedRatio);
     }
 
     private void UpdateAnimatorParameters()
@@ -165,20 +168,5 @@ public class PlayerMovement : MonoBehaviour, IMovable
 
         _animator.SetFloat(HorizontalSpeedHash, horizontal);
         _animator.SetFloat(VerticalSpeedHash, vertical);
-    }
-
-    public void ConnectToMoveEvent(IMovableEvent moveEvent)
-    {
-        Events.OnMove += moveEvent;
-    }
-
-    public void DisconnectFromMoveEvent(IMovableEvent moveEvent)
-    {
-        Events.OnMove -= moveEvent;
-    }
-
-    public MovementEventsContainer GetEventsContainer()
-    {
-        return Events;
     }
 }

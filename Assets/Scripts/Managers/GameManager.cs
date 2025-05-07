@@ -40,17 +40,15 @@ public class GameManager: MonoBehaviour
     private void OnEnable()
     {
         if (_playerInitializer != null)
-        {
             _player = _playerInitializer.PlayerInitialize();
-        }
         else
-        {
             _player = GameObject.FindGameObjectWithTag("Player")?.GetComponent<Player>();
-        }
 
         _gameTimer = GetComponent<GameTimer>();
-        _poolManager = (PoolManager)PoolManager.Instance;
         _gameTimer.OnTimerEnd += HandleGameOver;
+
+        _poolManager = (PoolManager)PoolManager.Instance;
+        _poolManager.Initialize();
 
         _obstacleGenerator = GameObject.FindGameObjectWithTag("ObstacleGenerator")
             .GetComponent<ObstacleGenerator>();

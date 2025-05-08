@@ -28,13 +28,21 @@ This project was developed as part of the **"Complete C# Unity Game Developer 3D
 
 ### ✨ Features
 
-    Endless-style gameplay loop (basic)
+3D Runner Gameplay – The player runs forward automatically along a narrow bridge, dodging obstacles in real time.
 
-    Simple but polished visual style with URP
+Dynamic & Static Obstacles – The game features both stationary and moving obstacles, generated procedurally during gameplay.
 
-    Third-person camera system using Cinemachine
+Checkpoint Timer System – Players have a limited amount of time to run. Reaching a checkpoint adds extra time, creating tension and pacing.
 
-    Clean code and organized hierarchy
+Third-Person Cinematic Camera – Built with Cinemachine for smooth and immersive camera transitions.
+
+Modern Input Handling – Utilizes Unity’s New Input System for responsive and extensible control support.
+
+URP Visuals – Enhanced graphics with the Universal Render Pipeline, including lighting and post-processing.
+
+Object Pooling System – Efficient reuse of path tiles and obstacles using custom caching and pooling logic, optimizing performance.
+
+Clean Codebase – Organized scripts and modular components designed for scalability and readability.
     
 ### 📦 Course Credit
 

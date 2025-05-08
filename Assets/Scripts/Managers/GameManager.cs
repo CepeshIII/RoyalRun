@@ -140,7 +140,8 @@ public class GameManager: MonoBehaviour
         OnGameOver?.Invoke();
 
         SavePlayerStats();
-        _player.gameObject.SetActive(false);
+        _gameTimer.ChangeGameSpeed(0.1f);
+        //_player.gameObject.SetActive(false);
         StartCoroutine(TransitionToMenu());
     }
 
@@ -160,6 +161,7 @@ public class GameManager: MonoBehaviour
     private IEnumerator TransitionToMenu()
     {
         yield return new WaitForSeconds(_postGameDelay);
+        _gameTimer.ChangeGameSpeed(1f);
         _sceneLoader.LoadMenuScene();
         Cleanup();
     }

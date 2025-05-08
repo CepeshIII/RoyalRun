@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class Fog : MonoBehaviour
 {
+    [SerializeField] ParticleSystem _particleSystem;
+    [SerializeField] Player _player;
+
     [SerializeField] Vector2 _position;
     [SerializeField] float _distance = 40f;
-    [SerializeField] Player _player;
-    [SerializeField] ParticleSystem _particleSystem;
-    float timeDelay = 0f;
 
     //Time to increase the density of fog 
     [SerializeField] float TimeToIncreaseDensityFog = 10f;
@@ -15,6 +15,7 @@ public class Fog : MonoBehaviour
     [SerializeField] float startDensityFog = 1f;
     [SerializeField] float increaseDensityFogSpeed = 0.025f;
 
+    float timeDelay = 0f;
 
     public void Initialize(Player player)
     {

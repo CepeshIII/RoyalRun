@@ -2,8 +2,10 @@ using UnityEngine;
 
 public class SpeedUpParticleSystem : MonoBehaviour
 {
+    [Header("References")]
     [SerializeField] private ParticleSystem _particleSystem;
 
+    [Header("RateOver Settings")]
     [SerializeField, Range(0, 100)] private float _maxRateOverTime = 50;
     [SerializeField] private AnimationCurve _rateOverTimeCurve;
 

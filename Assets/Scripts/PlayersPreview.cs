@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using Unity.Cinemachine;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayersPreview : MonoBehaviour

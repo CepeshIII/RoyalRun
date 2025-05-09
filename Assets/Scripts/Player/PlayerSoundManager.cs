@@ -1,7 +1,4 @@
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Audio;
-using UnityEngine.PlayerLoop;
 
 public class PlayerSoundManager : MonoBehaviour
 {

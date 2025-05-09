@@ -1,9 +1,6 @@
 ﻿using System.Collections;
-using System.Linq;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.SocialPlatforms;
 
 internal class SceneLoader: MonoBehaviour
 {

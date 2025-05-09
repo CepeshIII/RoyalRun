@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections;
 using Unity.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(GameTimer))]
 public class GameManager: MonoBehaviour
